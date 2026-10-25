@@ -64,4 +64,4 @@ for (const file of files) {
 }
 fs.writeFileSync(path.join(output, '.nojekyll'), '');
 console.log(`Ready: ${files.size + 1} deployment files, ${(bytes / 1024 / 1024).toFixed(1)} MiB in _site/`);
-console.log('Includes the intro video, constellation assets, original PDF, and all book pages.');
+console.log('Includes the GIF/image intro, constellation assets, original PDF, and all book pages.');

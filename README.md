@@ -1,7 +1,9 @@
 # 우리의 작은 우주
 
 학생과 학부모가 별자리를 탐험하며 배운 내용을 살펴보는 정적 웹사이트입니다.
-보라색 인물 영상에서 은하 지도로 이어지며, 소주제에 Canva 발표자료 또는 책 형태의 PDF 뷰어를 연결합니다.
+보라색 인물의 걷는 GIF와 가슴 열림 이미지에서 줌인·별빛 터널을 거쳐 은하 지도로 이어집니다. 소주제에는 Canva 발표자료 또는 책 형태의 PDF 뷰어를 연결합니다.
+
+현재 버전은 **1.1.0**이며 태그는 `v1.1.0-image-intro`입니다. [버전 기록](CHANGELOG.md)에 변경 사항을 기록합니다. 영상 인트로가 있던 버전은 로컬 Git 태그 `v1.0.0-video-intro`로 보존되어 있습니다.
 
 ## 로컬 미리보기
 
@@ -20,7 +22,7 @@ npm test
 npm run build
 ```
 
-`_site/`에 실제 사이트 파일만 모입니다. 인트로 MP4, 배경 이미지, 책의 원본 PDF와 28쪽 이미지가 포함됩니다.
+`_site/`에 실제 사이트 파일만 모입니다. 걷는 GIF·가슴 열림 이미지, 배경 이미지, 책의 원본 PDF와 28쪽 이미지가 포함됩니다. 현재 버전은 인트로 MP4를 로드하지 않습니다.
 과거 시안, 미리보기 캡처, 테스트, 개발용 도구와 메모는 사이트에 포함되지 않습니다.
 GitHub 프로젝트 하위 주소에서도 작동하도록 이미지·영상·문서는 상대 경로로 연결합니다.
 
@@ -43,7 +45,8 @@ GitHub Free에서는 공개 저장소로 Pages를 사용할 수 있습니다. �
 ## 내용 바꾸기
 
 - `cosmos-data.js`: 별자리 이름, 소주제, Canva 주소와 책의 페이지 설정
-- `assets/intro/intro-firefly.mp4`: 인트로 영상
+- `assets/intro/figure-walk.gif`, `assets/intro/figure-open.png`: 현재 인트로
+- `assets/intro/intro-firefly.mp4`: 이전 버전의 보관 영상
 - `assets/books/lit/`: 겸서 소주제 1의 PDF와 페이지 이미지
 - `book-reader.js`, `book-reader.css`: 책 뷰어
 - `script.js`, `style.css`: 별자리 지도와 카메라 조작
