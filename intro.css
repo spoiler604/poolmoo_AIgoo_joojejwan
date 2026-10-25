@@ -38,12 +38,6 @@
   mask-image: radial-gradient(ellipse 66% 67% at 51% 48%, #000 46%, transparent 77%);
 }
 .intro-person-open { opacity: 0; }
-.intro-person-video { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: cover; object-position: 51% 50%; opacity: 0; pointer-events: none; }
-.intro.has-video-preview .intro-person-video { opacity: 1; }
-.intro.has-video-preview .intro-camera { opacity: 0; }
-.intro-video-shade { position: absolute; z-index: 2; inset: 75% 0 0; pointer-events: none; background: linear-gradient(transparent, #06060ce8 85%); opacity: 0; transition: opacity .45s; }
-.intro.has-video-preview .intro-video-shade { opacity: 1; }
-.intro.is-entering .intro-video-shade { opacity: 0; }
 .intro-person-walk { opacity: 1; }
 .intro-tunnel { position: absolute; inset: 0; z-index: 3; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
 .intro-chest-light {
@@ -63,8 +57,5 @@
 @media (max-width: 600px) {
   .intro-figure { width: min(125vw, 78vh); }
   .intro-invitation { bottom: max(10vh, 32px); font-size: 12px; }
-}
-@media (max-width: 600px) and (orientation: portrait) {
-  .intro-person-video { object-fit: contain; transform: scale(2.05); -webkit-mask-image: linear-gradient(transparent calc(50% - 28.125vw), #000 calc(50% - 28.125vw + 20px), #000 calc(50% + 28.125vw - 20px), transparent calc(50% + 28.125vw)); mask-image: linear-gradient(transparent calc(50% - 28.125vw), #000 calc(50% - 28.125vw + 20px), #000 calc(50% + 28.125vw - 20px), transparent calc(50% + 28.125vw)); }
 }
 :root[data-motion="reduced"] .intro-chest-light { display: none; }
