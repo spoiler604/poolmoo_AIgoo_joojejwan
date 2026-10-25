@@ -1,0 +1,12 @@
+{
+  "name": "ai-learning-universe",
+  "version": "1.0.0",
+  "private": true,
+  "description": "우리의 작은 우주 · AI와 함께 배우는 세상",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "build": "node tools/build-site.cjs",
+    "preview": "node tools/preview-server.cjs"
+  }
+}

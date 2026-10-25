@@ -1,0 +1,70 @@
+/* The supplied cosmic figure walks until the visitor opens their chest. */
+.intro {
+  position: fixed; inset: 0; width: 100%; height: 100%; z-index: 100;
+  display: block; overflow: hidden; padding: 0; border: 0; border-radius: 0;
+  color: #f1e9ff; cursor: pointer; isolation: isolate; touch-action: manipulation;
+  background: radial-gradient(ellipse at 50% 52%, #211037 0, #0c0716 44%, #06060c 85%);
+  -webkit-tap-highlight-color: transparent;
+}
+.intro[hidden] { display: none; }
+.intro:focus-visible { outline: 2px solid #d9b8ff; outline-offset: -12px; }
+.intro-active .page-shell { opacity: 0; }
+.intro-revealing .page-shell { opacity: 1; }
+.intro-stars {
+  position: absolute; inset: 0; opacity: .5; pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 13% 21%, #dacbff 95%, transparent),
+    radial-gradient(1px 1px at 79% 16%, #ddd1ff 95%, transparent),
+    radial-gradient(1.5px 1.5px at 68% 76%, #ba8bff 95%, transparent),
+    radial-gradient(1px 1px at 28% 81%, #e5dbff 95%, transparent),
+    radial-gradient(1px 1px at 85% 48%, #c5b6f1 95%, transparent);
+  background-size: 321px 293px, 417px 379px, 523px 431px, 367px 419px, 293px 347px;
+}
+.intro-aura {
+  position: absolute; left: 50%; top: 52%; width: min(85vw, 90vh); aspect-ratio: 1;
+  transform: translate(-50%, -50%); border-radius: 50%; opacity: .35;
+  background: radial-gradient(ellipse, #a229ff35, #7316c511 45%, transparent 70%);
+  pointer-events: none;
+}
+.intro-camera { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.intro-figure {
+  position: relative; display: block; width: min(94vw, 84vh, 820px); aspect-ratio: 1;
+  transform: translateY(-1.5vh); transform-origin: 52% 55%;
+}
+.intro-person {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  user-select: none; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 66% 67% at 51% 48%, #000 46%, transparent 77%);
+  mask-image: radial-gradient(ellipse 66% 67% at 51% 48%, #000 46%, transparent 77%);
+}
+.intro-person-open { opacity: 0; }
+.intro-person-video { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: cover; object-position: 51% 50%; opacity: 0; pointer-events: none; }
+.intro.has-video-preview .intro-person-video { opacity: 1; }
+.intro.has-video-preview .intro-camera { opacity: 0; }
+.intro-video-shade { position: absolute; z-index: 2; inset: 75% 0 0; pointer-events: none; background: linear-gradient(transparent, #06060ce8 85%); opacity: 0; transition: opacity .45s; }
+.intro.has-video-preview .intro-video-shade { opacity: 1; }
+.intro.is-entering .intro-video-shade { opacity: 0; }
+.intro-person-walk { opacity: 1; }
+.intro-tunnel { position: absolute; inset: 0; z-index: 3; display: block; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
+.intro-chest-light {
+  position: absolute; left: 52%; top: 55%; width: 38%; aspect-ratio: 1;
+  border-radius: 50%; opacity: 0; transform: translate(-50%, -50%) scale(.1);
+  background: radial-gradient(circle, #f6daff 0, #d273ff70 12%, #b043ff30 30%, transparent 68%);
+  mix-blend-mode: screen;
+}
+.intro-invitation {
+  position: absolute; z-index: 4; left: 0; right: 0; bottom: max(7vh, 28px);
+  display: flex; justify-content: center; align-items: center; gap: 14px;
+  font-size: 13px; font-weight: 400; letter-spacing: .03em; color: #d1c4e3;
+  text-shadow: 0 2px 12px #000; pointer-events: none;
+}
+.intro-invitation > span { font-size: 17px; opacity: .6; }
+.intro.is-entering { cursor: default; }
+@media (max-width: 600px) {
+  .intro-figure { width: min(125vw, 78vh); }
+  .intro-invitation { bottom: max(10vh, 32px); font-size: 12px; }
+}
+@media (max-width: 600px) and (orientation: portrait) {
+  .intro-person-video { object-fit: contain; transform: scale(2.05); -webkit-mask-image: linear-gradient(transparent calc(50% - 28.125vw), #000 calc(50% - 28.125vw + 20px), #000 calc(50% + 28.125vw - 20px), transparent calc(50% + 28.125vw)); mask-image: linear-gradient(transparent calc(50% - 28.125vw), #000 calc(50% - 28.125vw + 20px), #000 calc(50% + 28.125vw - 20px), transparent calc(50% + 28.125vw)); }
+}
+:root[data-motion="reduced"] .intro-chest-light { display: none; }

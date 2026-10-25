@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#030712" />
+    <title>우리의 작은 우주 · AI와 함께 배우는 세상</title>
+    <script src="./motion.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./intro.css" />
+    <link rel="stylesheet" href="./book-reader.css" />
+    <link rel="preload" as="image" href="./assets/cosmos/milky-way.jpg" />
+    <link rel="preload" as="image" href="./assets/cosmos/spiral-galaxy.png" />
+    <link rel="preload" as="image" href="./assets/cosmos/astronaut-constellation-mono.png" />
+    <link rel="preload" as="image" href="./assets/intro/figure-walk.gif" />
+    <link rel="preload" as="image" href="./assets/intro/figure-open.png" />
+  </head>
+  <body class="intro-active">
+    <button class="intro" id="intro" type="button" aria-label="화면을 눌러 인물의 가슴 속 배움 지도로 들어가기">
+      <span class="intro-stars" aria-hidden="true"></span><span class="intro-aura" aria-hidden="true"></span>
+      <span class="intro-camera" aria-hidden="true"><span class="intro-figure">
+        <img class="intro-person intro-person-open" src="./assets/intro/figure-open.png" alt="" draggable="false" />
+        <img class="intro-person intro-person-walk" src="./assets/intro/figure-walk.gif" alt="" draggable="false" />
+        <span class="intro-chest-light"></span>
+      </span></span>
+      <video class="intro-person-video" data-src="./assets/intro/intro-firefly.mp4" data-idle-end="1.2" data-end="6.7" data-travel="included" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video>
+      <span class="intro-video-shade" aria-hidden="true"></span>
+      <canvas class="intro-tunnel" aria-hidden="true"></canvas>
+      <span class="intro-invitation">화면을 눌러, 안으로 들어가 보세요<span aria-hidden="true">↗</span></span>
+    </button>
+    <main class="page-shell" inert>
+      <section class="viewport" aria-label="일곱 개의 이야기를 탐험하는 별자리 지도">
+        <div class="garden" data-mode="closed">
+          <div class="cosmic-backdrop" aria-hidden="true"></div><div class="sky-dust" aria-hidden="true"></div>
+          <svg class="stellar-routes" viewBox="0 0 2400 1600" aria-hidden="true" focusable="false"></svg>
+          <button class="node node-root galaxy" type="button" aria-label="AI와 함께 배우는 세상" aria-expanded="false" aria-controls="main-topics">
+            <span class="galaxy-aura" aria-hidden="true"></span>
+            <span class="galaxy-rotor" aria-hidden="true"><img class="galaxy-art" src="./assets/cosmos/spiral-galaxy.png" alt="" draggable="false" /></span>
+            <span class="galaxy-caption"><span>AI와 함께 배우는 세상</span><small>우리의 작은 우주</small></span>
+          </button>
+          <div id="main-topics" class="constellations" inert></div>
+        </div>
+        <aside class="detail" id="topic-note" aria-label="소주제 메모" aria-live="polite" hidden>
+          <div class="note-heading"><span class="note-grip" aria-hidden="true">⠿</span><h2></h2><button class="detail-close" type="button" aria-label="메모 닫기">×</button></div>
+          <p class="note-meta"></p><p class="detail-copy"></p>
+          <div class="presentation" hidden>
+            <iframe class="presentation-frame" title="캔바 발표자료" allow="fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <a class="presentation-link" target="_blank" rel="noopener noreferrer">캔바에서 크게 보기 ↗</a>
+          </div>
+          <span class="note-footer">아직 쓰이지 않은, 우리만의 이야기</span>
+        </aside>
+        <span class="sr-only" id="scene-status" role="status" aria-live="polite"></span>
+      </section>
+      <p class="hint" id="scene-hint">은하를 눌러 일곱 개의 이야기를 만나보세요</p>
+    </main>
+    <dialog class="reader-dialog" id="book-reader" aria-labelledby="reader-title">
+      <header class="reader-heading">
+        <div class="reader-titles"><span class="reader-eyebrow"></span><h2 id="reader-title"></h2></div>
+        <a class="reader-original" target="_blank" rel="noopener noreferrer">PDF 원본 ↗</a>
+        <button class="reader-icon" type="button" data-book-close aria-label="책 닫기">×</button>
+      </header>
+      <div class="reader-main">
+        <div class="reader-stage">
+          <div class="reader-pages"></div>
+          <button class="reader-corner is-prev" type="button" aria-label="이전 페이지 모서리">‹</button>
+          <button class="reader-corner is-next" type="button" aria-label="다음 페이지 모서리">›</button>
+        </div>
+      </div>
+      <nav class="reader-toolbar" aria-label="책 페이지 탐색">
+        <button class="reader-control" type="button" data-book-prev>← 이전</button>
+        <output class="reader-counter" aria-live="polite"></output>
+        <button class="reader-control" type="button" data-book-next>다음 →</button>
+        <input class="reader-progress" type="range" min="1" max="28" value="1" aria-label="책 페이지 이동" />
+        <button class="reader-control" type="button" data-book-zoom aria-pressed="false">한 쪽 크게 보기</button>
+      </nav>
+      <p class="reader-tip"></p>
+    </dialog>
+    <script src="./cosmos-data.js"></script><script src="./book-model.js"></script><script src="./book-reader.js"></script><script src="./script.js"></script><script src="./intro-tunnel.js"></script><script src="./intro.js"></script>
+  </body>
+</html>

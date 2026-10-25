@@ -1,0 +1,24 @@
+# Local previews and earlier prototypes
+/preview*.png
+/archive/
+/background-art.svg
+/COSMOS-DESIGN.md
+/tools/video-review.html
+/assets/intro/README.md
+/assets/intro/figure-still.png
+/assets/cosmos/astronaut.png
+/assets/cosmos/astronaut-somodum.png
+
+# Generated output, local settings, and credentials
+/_site/
+/output/
+/tmp/
+/node_modules/
+/.codex/
+/.agents/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
