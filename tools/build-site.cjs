@@ -7,7 +7,7 @@ const output = path.join(base, '_site');
 const files = new Set([
   'index.html', 'style.css', 'intro.css', 'book-reader.css',
   'motion.js', 'cosmos-data.js', 'script.js', 'book-model.js',
-  'book-reader.js', 'intro-tunnel.js', 'intro.js',
+  'book-reader.js', 'intro-tunnel.js', 'intro.js', 'galaxy-player.js', 'article-reader.js', 'article-reader.css', 'sound.js', 'preview-layout.js',
 ]);
 
 function addReference(reference, from = '') {
@@ -29,6 +29,16 @@ vm.runInNewContext(fs.readFileSync(path.join(base, 'cosmos-data.js'), 'utf8'), c
 for (const topic of context.window.COSMIC_TOPICS) {
   if (topic.image) addReference(topic.image);
   for (const star of topic.stars) {
+    for (const image of star.article?.images || []) addReference(image);
+    if (star.presentation) {
+      addReference(star.presentation.url);
+      addReference(star.presentation.embedUrl);
+      if (star.presentation.type === 'pdf') {
+        for (let page = 1; page <= star.presentation.pageCount; page++) {
+          addReference(`${star.presentation.basePath}/page-${page}.jpg`);
+        }
+      }
+    }
     if (!star.book) continue;
     addReference(star.book.pdfUrl);
     for (let page = 1; page <= star.book.pageCount; page++) {
@@ -64,4 +74,4 @@ for (const file of files) {
 }
 fs.writeFileSync(path.join(output, '.nojekyll'), '');
 console.log(`Ready: ${files.size + 1} deployment files, ${(bytes / 1024 / 1024).toFixed(1)} MiB in _site/`);
-console.log('Includes the GIF/image intro, constellation assets, original PDF, and all book pages.');
+console.log('Includes the intro, animated galaxy, constellation assets, and currently connected materials.');

@@ -1,0 +1,87 @@
+/* Decorative planets share the map's camera but never intercept interaction. */
+.solar-planets {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  opacity: .58; transition: opacity 1.5s ease;
+}
+.garden.is-focused .solar-planets { opacity: .23; }
+.planet-drifter {
+  position: absolute; left: 0; top: 0;
+  width: 46px; height: 46px; pointer-events: none;
+  opacity: 0; transform: translate(-50%, -50%);
+}
+.solar-planet, .planet-system {
+  position: absolute; inset: 0; display: block;
+  transform: rotate(var(--tilt));
+}
+.solar-planet {
+  isolation: isolate; overflow: hidden; border-radius: 50%; background: #5a626e;
+  box-shadow: 0 0 24px #839ecb0e;
+}
+.planet-surface {
+  position: absolute; inset: -12%; display: block; border-radius: 50%;
+  background: var(--surface); background-size: cover;
+  animation: planet-turn var(--spin-time) linear infinite;
+  animation-delay: var(--phase); animation-direction: var(--spin-direction, normal);
+}
+.solar-planet::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(circle at 27% 23%, #fff5d121, transparent 45%),
+    radial-gradient(circle at 27% 29%, transparent 30%, #01040b80 65%, #01030bf2 94%);
+  box-shadow: inset 1px 1px 3px #f3eff326, inset -10px -8px 20px #0005;
+}
+.planet-mercury {
+  --surface: radial-gradient(ellipse at 37% 42%, #353538 0 5%, #85837c 7%, transparent 12%),
+    radial-gradient(circle at 63% 66%, #49484a 0 8%, #a49e91 10%, transparent 15%),
+    radial-gradient(circle at 62% 27%, #525155 0 3%, transparent 7%),
+    radial-gradient(circle at 29% 68%, #504f51 0 5%, transparent 10%),
+    repeating-radial-gradient(ellipse at 46% 36%, #9a958a 0 5%, #77777a 8%, #aaa293 14%);
+}
+.planet-venus {
+  --surface: repeating-linear-gradient(164deg, #a98254 0%, #d8b580 9%, #c39b69 14%, #efd2a0 19%, #ad8659 27%);
+}
+.planet-earth {
+  --surface: radial-gradient(ellipse at 29% 30%, #e0e8e9a1 0 2%, transparent 14%),
+    radial-gradient(ellipse at 70% 57%, #deebef99 0 3%, transparent 16%),
+    radial-gradient(ellipse at 46% 11%, #e4e7db 0 8%, transparent 13%),
+    radial-gradient(ellipse at 32% 35%, #718559 0 8%, #55715b 12%, transparent 14%),
+    radial-gradient(ellipse at 41% 59%, #8b8a5b 0 5%, #4c725e 9%, transparent 11%),
+    radial-gradient(ellipse at 67% 40%, #8c9566 0 11%, #477265 14%, transparent 17%),
+    radial-gradient(ellipse at 68% 70%, #888753 0 4%, transparent 7%),
+    linear-gradient(25deg, #143a61, #326b99 56%, #8ba8c0);
+  box-shadow: 0 0 8px #77c9fa20, 0 0 25px #469ede0f;
+}
+.planet-mars {
+  --surface: radial-gradient(ellipse at 48% 6%, #e8ded1 0 6%, transparent 12%),
+    radial-gradient(ellipse at 37% 58%, #704d3b 0 9%, transparent 25%),
+    radial-gradient(ellipse at 71% 41%, #754a38 0 8%, transparent 24%),
+    repeating-radial-gradient(ellipse at 32% 38%, #b77c59 0 12%, #c78d66 20%, #976044 28%);
+}
+.planet-jupiter {
+  --surface: radial-gradient(ellipse at 69% 65%, #9d604d 0 4%, #c99679 6%, transparent 9%),
+    repeating-linear-gradient(4deg, #bc9e83 0 6%, #e1cbb0 8% 12%, #987661 14% 17%, #c09a7c 19% 23%, #e9d5b8 25% 30%);
+}
+.planet-saturn {
+  inset: 25%;
+  --surface: repeating-linear-gradient(0deg, #b09b75 0 7%, #dbca9f 12% 19%, #b6a07d 23% 27%, #e1d2b1 31% 37%);
+  animation: planet-system-turn 460s linear infinite;
+  animation-delay: var(--phase);
+}
+.planet-saturn > .solar-planet { transform: none; }
+.planet-ring {
+  position: absolute; left: -51%; top: 25%; width: 202%; height: 50%;
+  border-radius: 50%; transform: rotate(-8deg);
+  background: radial-gradient(ellipse at center, transparent 0 49%, #a7956d80 50% 55%, #574e3d99 56% 59%, #c7b88f91 60% 64%, #b5a27b6b 65% 69%, transparent 70%);
+}
+.planet-ring-front { clip-path: inset(50% 0 0); }
+.planet-uranus {
+  --surface: repeating-linear-gradient(4deg, #7cbbbf 0 10%, #a0d0cc 18% 25%, #80bfc2 34% 42%, #96c7cb 48% 58%);
+}
+.planet-neptune {
+  --surface: radial-gradient(ellipse at 39% 64%, #163769 0 7%, transparent 16%),
+    repeating-linear-gradient(-8deg, #315d9e 0 11%, #447bb5 17% 24%, #2f63a6 30% 43%, #5b87bb 50% 56%);
+}
+.intro-active :is(.planet-drifter, .planet-surface, .planet-saturn),
+.planet-drifter:not(.is-travelling) :is(.planet-surface, .planet-saturn) { animation-play-state: paused; }
+@keyframes planet-turn { to { transform: rotate(360deg); } }
+@keyframes planet-system-turn { from { transform: rotate(var(--tilt)); } to { transform: rotate(calc(var(--tilt) + 360deg)); } }
+:root[data-ambient-motion="reduced"] :is(.planet-drifter, .planet-surface, .planet-saturn) { animation: none !important; }

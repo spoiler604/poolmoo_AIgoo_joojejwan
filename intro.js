@@ -71,6 +71,7 @@
   async function travel() {
     if (completed) return;
     intro.dataset.stage = 'approaching';
+    window.ExhibitionSound?.travel();
     const bounds = figure.getBoundingClientRect();
     const chestX = bounds.left + bounds.width * .52;
     const chestY = bounds.top + bounds.height * .55;
@@ -98,6 +99,9 @@
   async function enter() {
     if (entering) return;
     entering = true;
+    window.ExhibitionSound?.leaveIntro();
+    window.ExhibitionSound?.unlock();
+    if (!reduceMotion()) window.ExhibitionSound?.intro();
     intro.dataset.stage = 'opening';
     intro.classList.add('is-entering');
     intro.setAttribute('aria-label', '별빛을 따라 배움 지도로 들어가는 중');

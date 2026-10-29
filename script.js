@@ -4,16 +4,18 @@
   const viewport = document.querySelector('.viewport');
   const garden = document.querySelector('.garden');
   const root = document.querySelector('.node-root');
-  const galaxyRotor = root.querySelector('.galaxy-rotor');
+  const galaxyVideo = root.querySelector('.galaxy-video');
+  const galaxyPlayer = window.createGalaxyPlayer({ root, video: galaxyVideo, canvas: root.querySelector('.galaxy-motion') });
   const groups = document.querySelector('#main-topics');
   const routes = document.querySelector('.stellar-routes');
   const hint = document.querySelector('#scene-hint');
   const status = document.querySelector('#scene-status');
   const note = document.querySelector('#topic-note');
+  const previewLayer = document.querySelector('#topic-previews');
+  const previewCards = previewLayer.querySelector('.preview-cards');
+  const previewTethers = previewLayer.querySelector('.preview-tethers');
   const reduceMotion = () => document.documentElement.dataset.motion === 'reduced';
   const ROOT = { x: 1200, y: 800 };
-  const GALAXY_HOME_ANGLE = 30;
-  const GALAXY_TURN_ANGLE = 45;
   const MAX_ZOOM = 1.2;
   const state = { mode: 'closed', selected: null, view: { ...ROOT, scale: .82 } };
   const views = new Map();
@@ -30,15 +32,28 @@
   let proximityFrame = 0;
   let openingVersion = 0;
   let openingResolve = null;
-  let galaxyMotion = null;
   let galaxySequence = 0;
   const openingTimers = new Set();
+  const storyTitle = (star) => star.article?.title || star.presentation?.title || star.book?.title || star.name;
 
   const mapFitZoom = () => Math.max(.1, Math.min(.64, (viewport.clientWidth - 64) / 2040, (viewport.clientHeight - 115) / 1440));
   const minZoom = () => Math.min(mapFitZoom(), .48, Math.max(.2, (viewport.clientWidth - 40) / 1900)) * 1.1;
   const closedZoom = () => clamp(Math.min(.82, (viewport.clientWidth - 64) / 640), minZoom(), MAX_ZOOM);
   const overviewZoom = () => clamp(mapFitZoom(), minZoom(), MAX_ZOOM);
-  const focusZoom = () => clamp((viewport.clientWidth - 40) / 430, .7, MAX_ZOOM);
+  const previewMedia = () => views.get(state.selected)?.previews.map(preview => ({ image:preview.image, ratio:preview.ratio })) || [];
+  const focusZoom = () => {
+    const card = window.PreviewLayout.size(viewport.clientWidth, viewport.clientHeight, previewMedia());
+    const width = viewport.clientWidth - (card.compact ? 40 : 2 * card.width + 100);
+    const height = viewport.clientHeight - (card.compact ? card.height + 170 : 130);
+    return clamp(Math.min(width / 430, height / 440), card.compact ? .5 : .65, MAX_ZOOM);
+  };
+  const focusOffset = () => {
+    const card=window.PreviewLayout.size(viewport.clientWidth,viewport.clientHeight,previewMedia());
+    if (!card.compact) return 35;
+    const scale=focusZoom();
+    const centerY=Math.min(viewport.clientHeight/2-95*scale,viewport.clientHeight-card.height-100-230*scale);
+    return (viewport.clientHeight/2-centerY)/scale;
+  };
 
   function chartGeometry(topic, position) {
     // Follow the graph outward from the star closest to the galaxy.
@@ -65,7 +80,7 @@
       });
     }
     const longest = Math.max(1, ...distances.filter(Number.isFinite));
-    return { entry, edges, delays: distances.map((d) => Number.isFinite(d) ? d / longest * .85 : 0) };
+    return { entry, edges, delays: distances.map((d) => Number.isFinite(d) ? d / longest * .55 : 0) };
   }
 
   function svgFor(topic, geometry) {
@@ -97,9 +112,9 @@
     button.disabled = true;
     button.className = 'topic-hitbox';
     button.setAttribute('aria-label', topic.name);
-    button.setAttribute('aria-description', `${index + 1}번, ${topic.kind}. 누르면 확대됩니다.`);
+    button.setAttribute('aria-description', `${index + 1}번, ${topic.kind}. 누르면 확대되어 이야기 미리보기가 나타납니다.`);
     button.setAttribute('aria-expanded', 'false');
-    button.setAttribute('aria-controls', `stars-${topic.id}`);
+    button.setAttribute('aria-controls', `stars-${topic.id} topic-previews`);
     const illustration = topic.image
       ? `<img class="astronaut-art" src="${topic.image}" alt="" draggable="false" />`
       : '';
@@ -108,40 +123,129 @@
     starGroup.className = 'focus-stars';
     starGroup.id = `stars-${topic.id}`;
     starGroup.inert = true;
+    const previews = [];
     const stars = topic.stars.map((star, starIndex) => {
       const [x, y] = star.position || topic.points[star.anchor];
-      const node = document.createElement('button');
-      node.type = 'button';
-      node.className = 'star-button';
+      const node = document.createElement('span');
+      node.className = 'star-marker';
       node.dataset.star = String(starIndex + 1);
       node.style.left = `${210 + x}px`;
       node.style.top = `${200 + y}px`;
-      node.setAttribute('aria-label', `${topic.name} 소주제 ${starIndex + 1}`);
-      node.setAttribute('aria-description', `${star.name}, ${star.bayer}`);
-      node.setAttribute('aria-expanded', 'false');
-      node.setAttribute('aria-controls', star.book ? 'book-reader' : note.id);
-      node.innerHTML = `<span class="star-core" aria-hidden="true"></span><span class="star-label"><strong>소주제 ${starIndex + 1}</strong><small>${star.name} · ${star.bayer}</small></span>`;
-      node.addEventListener('click', () => {
+      node.setAttribute('aria-hidden', 'true');
+      node.innerHTML = '<span class="star-core" aria-hidden="true"></span>';
+      const preview = makePreview(topic, star, starIndex, node);
+      previews.push(preview);
+      preview.button.addEventListener('click', () => {
         if (state.selected !== topic.id || starGroup.inert) return;
-        if (star.book) {
+        window.ExhibitionSound?.detail(starIndex);
+        if (star.article) {
           hideNote();
-          window.BookReader.open(star.book, node);
+          window.ArticleReader.open(star.article, preview.button, topic.name);
           return;
         }
-        if (noteAnchor?.node === node) hideNote();
-        else showNote(topic.id, starIndex, node);
+        if (star.book) {
+          hideNote();
+          window.BookReader.open(star.book, preview.button);
+          return;
+        }
+        if (noteAnchor?.node === preview.button) hideNote();
+        else showNote(topic.id, starIndex, preview.button);
       });
       starGroup.append(node);
       return node;
     });
     element.append(button, starGroup);
     groups.append(element);
-    views.set(topic.id, { topic, index, base, geometry, x: base.x, y: base.y, element, button, starGroup, stars, route: null });
+    views.set(topic.id, { topic, index, base, geometry, x: base.x, y: base.y, element, button, starGroup, stars, previews, route: null });
     button.addEventListener('click', (event) => {
       // A near-miss beside a star must not zoom the visitor back out.
       if (state.selected !== topic.id) focusTopic(topic.id, event.detail === 0);
     });
   });
+
+  function makePreview(topic, star, index, marker) {
+    const element = document.createElement('div');
+    element.className = 'preview-card';
+    const media = document.createElement('div');
+    media.className = 'preview-media';
+    media.setAttribute('aria-hidden', 'true');
+    let image = star.article?.images?.[0];
+    if (star.book) image = `${star.book.basePath}/page-01.jpg`;
+    if (star.presentation?.type === 'pdf') image = `${star.presentation.basePath}/page-1.jpg`;
+    if (image) {
+      const thumbnail = document.createElement('img');
+      thumbnail.src = image; thumbnail.alt = ''; thumbnail.draggable = false;
+      media.append(thumbnail);
+    } else if (star.presentation?.embedUrl) {
+      const frame = document.createElement('iframe');
+      frame.dataset.src = star.presentation.embedUrl;
+      frame.title = `${storyTitle(star)} 미리보기 이미지`;
+      frame.tabIndex = -1; frame.inert = true;
+      frame.setAttribute('aria-hidden', 'true');
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      media.append(frame);
+    } else {
+      const paper = document.createElement('div');
+      paper.className = star.article ? 'preview-paper' : 'preview-placeholder';
+      const title = document.createElement('strong');
+      title.textContent = star.article?.title || '새로운 이야기를 기다리는 별';
+      const copy = document.createElement('span');
+      copy.textContent = star.article ? document.getElementById(star.article.template)?.content.querySelector('.article-intro')?.textContent || '' : '준비 중';
+      paper.append(title, copy); media.append(paper);
+    }
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'preview-open';
+    button.setAttribute('aria-label', `${topic.name} · ${storyTitle(star)} 미리보기`);
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', star.article ? 'article-reader' : star.book ? 'book-reader' : note.id);
+    const caption = document.createElement('span'); caption.className = 'preview-caption';
+    const title = document.createElement('strong'); title.textContent = storyTitle(star);
+    title.title = storyTitle(star);
+    const arrow = document.createElement('span'); arrow.className = 'preview-arrow'; arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true');
+    caption.append(title, arrow); button.append(caption);
+    element.append(media, button);
+    button.addEventListener('pointerenter', () => marker.classList.add('is-highlighted'));
+    button.addEventListener('pointerleave', () => marker.classList.remove('is-highlighted'));
+    button.addEventListener('focus', () => marker.classList.add('is-highlighted'));
+    button.addEventListener('blur', () => marker.classList.remove('is-highlighted'));
+    const tether = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const ratio=star.article?.imageSize ? star.article.imageSize[0]/star.article.imageSize[1] : 16/9;
+    const preview={ element, button, media, tether, image:Boolean(image || star.presentation?.embedUrl), ratio };
+    element.classList.toggle('has-preview-image', preview.image);
+    const thumbnail=media.querySelector('img');
+    if (thumbnail) {
+      thumbnail.addEventListener('load', () => {
+        preview.ratio=thumbnail.naturalWidth/thumbnail.naturalHeight;
+        if (state.selected===topic.id) positionPreviews();
+      });
+    }
+    return preview;
+  }
+
+  function positionPreviews() {
+    if (previewLayer.hidden || !state.selected) return;
+    const view = views.get(state.selected);
+    const anchors = view.topic.stars.map((_, index) => starPoint(view.topic.id, index));
+    const layout = window.PreviewLayout.arrange({ width: viewport.clientWidth, height: viewport.clientHeight,
+      center: screenPoint(view.x, view.y), anchors, scale: state.view.scale, media:previewMedia() });
+    previewLayer.classList.toggle('is-compact', layout[0].compact);
+    view.previews.forEach((preview, index) => {
+      const box = layout[index], point = anchors[index];
+      Object.assign(preview.element.style, { left: `${box.x}px`, top: `${box.y}px`, width: `${box.width}px`, height: `${box.height}px` });
+      preview.media.style.setProperty('--thumbnail-scale', String(box.width / 960));
+      preview.media.style.height = `${box.mediaHeight}px`;
+      let x, y, path;
+      if (box.side === 'bottom') {
+        x = clamp(point.x, box.x + 18, box.x + box.width - 18); y = box.y;
+        path = `M${point.x} ${point.y}Q${point.x} ${y - 24} ${x} ${y}`;
+      } else {
+        x = box.side === 'left' ? box.x + box.width : box.x;
+        y = clamp(point.y, box.y + 20, box.y + box.height - 20);
+        path = `M${point.x} ${point.y}L${x} ${y - 9}L${x} ${y + 9}Z`;
+      }
+      preview.tether.setAttribute('d', path);
+    });
+  }
 
   function placeTopics(randomize = false) {
     views.forEach((view) => {
@@ -174,7 +278,7 @@
       route.dataset.route = view.topic.id;
       route.style.color = view.topic.tint;
       const linePoints = [[ROOT.x, ROOT.y], ...points];
-      route.innerHTML = `<polyline class="route-thread" pathLength="1" points="${linePoints.map((p) => p.join(',')).join(' ')}"/>${points.map(([x, y], i) => `<g class="route-star" style="--arrival:${i / steps * .78}s;transform-origin:${x}px ${y}px"><circle cx="${x}" cy="${y}" r="${i % 3 === 0 ? 3.3 : 2.1}"/>${i % 3 === 0 ? `<path d="M${x-7} ${y}h14M${x} ${y-7}v14"/>` : ''}</g>`).join('')}`;
+      route.innerHTML = `<polyline class="route-thread" pathLength="1" points="${linePoints.map((p) => p.join(',')).join(' ')}"/>${points.map(([x, y], i) => `<g class="route-star" style="--arrival:${i / steps * .4}s;transform-origin:${x}px ${y}px"><circle cx="${x}" cy="${y}" r="${i % 3 === 0 ? 3.3 : 2.1}"/>${i % 3 === 0 ? `<path d="M${x-7} ${y}h14M${x} ${y-7}v14"/>` : ''}</g>`).join('')}`;
       routes.append(route);
       view.route = route;
     });
@@ -215,16 +319,17 @@
         openingTimers.add(timer);
       }
       views.forEach((view) => {
-        const departure = 180 + view.index * 280;
-        const constellationStart = 2680 + view.index * 140;
+        const departure = 80 + view.index * 140;
+        const constellationStart = 650 + view.index * 180;
         later(departure, () => view.route.classList.add('is-tracing'));
-        later(departure + 700, () => {
+        later(departure + 600, () => {
           view.route.classList.replace('is-tracing', 'is-connected');
         });
         later(constellationStart, () => {
           view.element.classList.add('is-unfolding');
+          window.ExhibitionSound?.constellation(view.index);
         });
-        later(constellationStart + 1300, () => {
+        later(constellationStart + 1050, () => {
           view.element.classList.replace('is-unfolding', 'is-revealed');
           if (view.index === DATA.length - 1) {
             garden.classList.remove('is-opening');
@@ -246,52 +351,26 @@
     });
   }
 
-  function currentGalaxyAngle() {
-    const transform = getComputedStyle(galaxyRotor).transform;
-    if (!transform || transform === 'none') return 0;
-    const values = transform.match(/-?[\d.]+(?:e[-+]?\d+)?/gi)?.map(Number);
-    if (!values || values.length < 4) return 0;
-    const angle = Math.atan2(values[1], values[0]) * 180 / Math.PI;
-    return angle < 0 ? angle + 360 : angle;
-  }
-
-  function animateGalaxyTo(angle, duration, token) {
+  function playGalaxyVideo(token, playbackRate = 1) {
     if (token !== galaxySequence) return Promise.resolve(false);
-    galaxyMotion?.cancel();
-    const from = currentGalaxyAngle();
-    if (reduceMotion()) {
-      galaxyRotor.style.transform = `rotate(${angle}deg)`;
-      return Promise.resolve(true);
-    }
-    const animation = galaxyRotor.animate([
-      { transform: `rotate(${from}deg)` },
-      { transform: `rotate(${angle}deg)` },
-    ], { duration, easing: 'ease-in-out', fill: 'forwards', iterations: 1 });
-    galaxyMotion = animation;
-    return animation.finished.then(() => {
-      if (token !== galaxySequence) return false;
-      galaxyRotor.style.transform = `rotate(${angle}deg)`;
-      animation.cancel();
-      if (galaxyMotion === animation) galaxyMotion = null;
-      return true;
-    }, () => false);
+    // Use the opening three seconds and crossfade back to the still image.
+    return galaxyPlayer.play(playbackRate, 3);
   }
 
   async function runOpeningSequence() {
     const token = ++galaxySequence;
-    galaxyMotion?.cancel();
+    galaxyPlayer.stop();
     root.disabled = true;
     setTopicsInteractive(false);
+    window.ExhibitionSound?.galaxy(true);
     const unfolded = unfoldConstellations();
-    const turned = animateGalaxyTo(GALAXY_HOME_ANGLE + GALAXY_TURN_ANGLE, 4800, token);
-    const [didUnfold, didTurn] = await Promise.all([unfolded, turned]);
-    if (!didUnfold || !didTurn || token !== galaxySequence || state.mode !== 'overview') return;
-    await animateGalaxyTo(GALAXY_HOME_ANGLE, 1800, token);
-    if (token !== galaxySequence || state.mode !== 'overview') return;
+    const played = playGalaxyVideo(token, 1.2);
+    const [didUnfold, didPlay] = await Promise.all([unfolded, played]);
+    if (!didUnfold || token !== galaxySequence || state.mode !== 'overview') return;
     setTopicsInteractive(true);
     root.disabled = false;
-    hint.textContent = '별자리를 누르면 가까이, 빛나는 별을 누르면 이야기';
-    status.textContent = '은하가 원래 자리로 돌아왔습니다. 별자리를 선택할 수 있습니다.';
+    hint.textContent = '별자리를 누르면 가까이, 미리보기 카드를 누르면 이야기';
+    status.textContent = didPlay ? '은하 영상이 끝났습니다. 별자리를 선택할 수 있습니다.' : '은하 영상을 재생할 수 없어 정지 이미지로 표시합니다. 별자리를 선택할 수 있습니다.';
   }
 
   function appear(element, delay = 0) {
@@ -325,6 +404,7 @@
     const { x, y, scale } = state.view;
     garden.style.setProperty('--map-zoom', String(scale));
     garden.style.transform = `translate(${viewport.clientWidth / 2 - x * scale}px, ${viewport.clientHeight / 2 - y * scale}px) scale(${scale})`;
+    positionPreviews();
     updateNotePosition();
   }
 
@@ -359,6 +439,11 @@
   }
 
   function clearFocus() {
+    previewLayer.hidden = true;
+    previewLayer.inert = true;
+    previewCards.querySelectorAll('iframe').forEach(frame => frame.removeAttribute('src'));
+    previewCards.replaceChildren();
+    previewTethers.replaceChildren();
     state.selected = null;
     garden.classList.remove('is-focused');
     views.forEach((view) => {
@@ -378,7 +463,7 @@
     garden.classList.add('is-open');
     groups.inert = false;
     root.setAttribute('aria-expanded', 'true');
-    hint.textContent = '별자리를 누르면 가까이, 빛나는 별을 누르면 이야기';
+    hint.textContent = '별자리를 누르면 가까이, 미리보기 카드를 누르면 이야기';
     if (wasClosed) {
       placeTopics(true);
       runOpeningSequence();
@@ -390,8 +475,9 @@
   async function closeMap() {
     if (state.mode === 'closing') return;
     const token = ++galaxySequence;
-    galaxyMotion?.cancel();
+    galaxyPlayer.stop();
     root.disabled = true;
+    window.ExhibitionSound?.galaxy(false);
     hideNote();
     clearFocus();
     if (garden.classList.contains('is-opening')) cancelOpening(true);
@@ -400,9 +486,9 @@
     garden.classList.add('is-closing');
     groups.inert = true;
     hint.textContent = '별자리들이 빛 속으로 사라지고 있습니다';
-    status.textContent = '은하가 45도 회전하며 별자리 지도를 접고 있습니다.';
-    const turned = await animateGalaxyTo(GALAXY_HOME_ANGLE + GALAXY_TURN_ANGLE, 2200, token);
-    if (!turned || token !== galaxySequence) return;
+    status.textContent = '회오리치는 은하와 함께 별자리 지도를 접고 있습니다.';
+    await playGalaxyVideo(token, 2);
+    if (token !== galaxySequence) return;
     cancelOpening();
     state.mode = 'closed';
     garden.dataset.mode = 'closed';
@@ -410,8 +496,6 @@
     views.forEach((view) => appearances.get(view.element)?.cancel());
     root.setAttribute('aria-expanded', 'false');
     flyTo({ ...ROOT, scale: closedZoom() });
-    await animateGalaxyTo(GALAXY_HOME_ANGLE, 1800, token);
-    if (token !== galaxySequence) return;
     root.disabled = false;
     hint.textContent = '은하를 눌러 일곱 개의 이야기를 만나보세요';
     status.textContent = '은하가 원래 자리로 돌아오고 별자리 지도를 접었습니다.';
@@ -423,9 +507,19 @@
     if (view.element.classList.contains('stars-ready')) return;
     view.starGroup.inert = false;
     view.element.classList.add('stars-ready');
+    previewCards.replaceChildren(...view.previews.map(preview => preview.element));
+    previewTethers.replaceChildren(...view.previews.map(preview => preview.tether));
+    previewLayer.hidden = false;
+    previewLayer.inert = false;
+    positionPreviews();
+    view.previews.forEach((preview, index) => {
+      const frame = preview.media.querySelector('iframe');
+      if (frame) frame.src = frame.dataset.src;
+      appear(preview.element, index * 100);
+    });
     view.stars.forEach((star, index) => appear(star, index * 100));
-    if (keyboard) view.stars[0].focus({ preventScroll: true });
-    status.textContent = `${view.topic.name}의 소주제 별 3개를 선택할 수 있습니다.`;
+    if (keyboard) view.previews[0].button.focus({ preventScroll: true });
+    status.textContent = `${view.topic.name}의 이야기 미리보기 ${view.previews.length}개를 선택할 수 있습니다.`;
   }
 
   function focusTopic(id, keyboard = false) {
@@ -434,6 +528,7 @@
     hideNote();
     clearFocus();
     const view = views.get(id);
+    window.ExhibitionSound?.focus(view.index);
     state.mode = 'focus';
     state.selected = id;
     garden.dataset.mode = 'focus';
@@ -442,8 +537,8 @@
     view.element.classList.add('is-selected');
     view.button.setAttribute('aria-expanded', 'true');
     root.setAttribute('aria-expanded', 'true');
-    hint.textContent = '별에 다가가 소주제를 열어보세요 · ESC로 멀리 보기';
-    flyTo({ x: view.x, y: view.y + 35, scale: focusZoom() }, () => enableStars(id, keyboard));
+    hint.textContent = '미리보기 카드를 눌러 이야기를 열어보세요 · ESC로 멀리 보기';
+    flyTo({ x: view.x, y: view.y + focusOffset(), scale: focusZoom() }, () => enableStars(id, keyboard));
   }
 
   root.addEventListener('click', () => {
@@ -472,19 +567,35 @@
     const topic = views.get(id).topic;
     const star = topic.stars[starIndex];
     const presentation = star.presentation;
+    const isPdf = presentation?.type === 'pdf';
     const presentationPanel = note.querySelector('.presentation');
     const frame = note.querySelector('.presentation-frame');
+    const pages = note.querySelector('.presentation-pages');
+    frame.hidden = isPdf;
+    pages.hidden = !isPdf;
+    pages.replaceChildren();
     note.classList.toggle('has-presentation', Boolean(presentation));
     presentationPanel.hidden = !presentation;
     note.querySelector('.detail-copy').hidden = Boolean(presentation);
-    note.querySelector('h2').textContent = presentation?.title || `소주제 ${starIndex + 1}`;
+    note.querySelector('h2').textContent = storyTitle(star);
     note.querySelector('.note-meta').textContent = `${topic.name} / ${star.name} (${star.latin}) · ${star.bayer}`;
-    note.querySelector('.detail-copy').textContent = `이곳에 소주제 ${starIndex + 1}의 소개 내용을 채울 예정입니다.`;
-    note.querySelector('.note-footer').textContent = presentation ? '아래 화살표로 슬라이드를 넘기거나 전체 화면으로 감상하세요' : '아직 쓰이지 않은, 우리만의 이야기';
+    note.querySelector('.detail-copy').textContent = '이야기를 준비하고 있습니다.';
+    note.querySelector('.note-footer').textContent = isPdf ? `아래로 스크롤해 ${presentation.pageCount}쪽의 발표자료를 읽어 보세요` : presentation ? '아래 화살표로 슬라이드를 넘기거나 전체 화면으로 감상하세요' : '아직 쓰이지 않은, 우리만의 이야기';
     if (presentation) {
       frame.title = presentation.title;
-      frame.src = presentation.embedUrl;
+      if (isPdf) {
+        for (let page = 1; page <= presentation.pageCount; page++) {
+          const image = document.createElement('img');
+          image.src = `${presentation.basePath}/page-${page}.jpg`;
+          image.alt = `${presentation.title} · ${page}쪽`;
+          image.loading = page === 1 ? 'eager' : 'lazy';
+          image.width = 2200; image.height = 1238;
+          pages.append(image);
+        }
+        pages.scrollTop = 0;
+      } else frame.src = presentation.embedUrl;
       note.querySelector('.presentation-link').href = presentation.url;
+      note.querySelector('.presentation-link').textContent = isPdf ? 'PDF 새 탭에서 보기 ↗' : '캔바에서 크게 보기 ↗';
     }
     note.hidden = false;
     note.inert = false;
@@ -511,6 +622,7 @@
     note.hidden = true;
     note.inert = true;
     note.querySelector('.presentation-frame').removeAttribute('src');
+    note.querySelector('.presentation-pages').replaceChildren();
   }
 
   function updateNotePosition() {
@@ -526,7 +638,7 @@
   });
 
   viewport.addEventListener('wheel', (event) => {
-    if (event.target.closest('.detail')) return;
+    if (event.target.closest('.detail, .preview-card')) return;
     event.preventDefault();
     stopFlight();
     const { scale } = state.view;
@@ -541,7 +653,7 @@
     if (state.mode === 'focus') {
       if (next < .7) {
         hideNote(); clearFocus(); state.mode = 'overview'; garden.dataset.mode = 'overview';
-        hint.textContent = '별자리를 누르면 가까이, 빛나는 별을 누르면 이야기';
+        hint.textContent = '별자리를 누르면 가까이, 미리보기 카드를 누르면 이야기';
       } else enableStars(state.selected);
     }
     render();
@@ -555,7 +667,7 @@
     if (event.button !== 0 || drag) return;
     // Suppress only the synthetic click at the end of a drag, not a new press.
     ignoreClickUntil = 0;
-    if (event.target.closest('.star-button, .detail-close')) return;
+    if (event.target.closest('.preview-card, .detail-close')) return;
     const inNote = event.target.closest('.detail');
     if (inNote && !event.target.closest('.note-heading')) return;
     const target = event.target.closest('button') || (inNote ? note : viewport);
@@ -625,7 +737,7 @@
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) viewport.addEventListener(type, endDrag);
 
   document.addEventListener('keydown', (event) => {
-    if (window.BookReader?.isOpen()) return;
+    if (window.BookReader?.isOpen() || window.ArticleReader?.isOpen()) return;
     if (event.key !== 'Escape') return;
     if (noteAnchor) { const node = noteAnchor.node; hideNote(); node.focus({ preventScroll: true }); }
     else if (state.mode === 'focus') showOverview();
@@ -638,7 +750,7 @@
     else if (state.mode === 'overview' || state.mode === 'closing') Object.assign(state.view, ROOT, { scale: overviewZoom() });
     else {
       const view = views.get(state.selected);
-      Object.assign(state.view, { x: view.x, y: view.y + 35, scale: focusZoom() });
+      Object.assign(state.view, { x: view.x, y: view.y + focusOffset(), scale: focusZoom() });
       enableStars(state.selected);
     }
     render();

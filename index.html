@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#030712" />
-    <title>우리의 작은 우주 · AI와 함께 배우는 세상</title>
+    <title>에이구 · 2026 풀무제 소모둠</title>
     <script src="./motion.js"></script>
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./planets.css" />
     <link rel="stylesheet" href="./intro.css" />
     <link rel="stylesheet" href="./book-reader.css" />
+    <link rel="stylesheet" href="./article-reader.css" />
     <link rel="preload" as="image" href="./assets/cosmos/milky-way.jpg" />
     <link rel="preload" as="image" href="./assets/cosmos/spiral-galaxy.png" />
     <link rel="preload" as="image" href="./assets/cosmos/astronaut-constellation-mono.png" />
@@ -16,9 +18,13 @@
     <link rel="preload" as="image" href="./assets/intro/figure-open.png" />
   </head>
   <body class="intro-active">
+    <button class="sound-toggle" type="button" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5 5 9H2v6h3l5 4Z"/><g class="sound-waves"><path d="M14 8a6 6 0 0 1 0 8M17 4a11 11 0 0 1 0 16"/></g><path class="sound-muted" d="m15 9 6 6m0-6-6 6"/></svg>
+    </button>
     <button class="intro" id="intro" type="button" aria-label="화면을 눌러 인물의 가슴 속 배움 지도로 들어가기">
       <span class="intro-stars" aria-hidden="true"></span><span class="intro-aura" aria-hidden="true"></span>
-      <span class="intro-camera" aria-hidden="true"><span class="intro-figure">
+      <span class="intro-camera" aria-hidden="true">
+        <span class="intro-figure">
         <img class="intro-person intro-person-open" src="./assets/intro/figure-open.png" alt="" draggable="false" />
         <img class="intro-person intro-person-walk" src="./assets/intro/figure-walk.gif" alt="" draggable="false" />
         <span class="intro-chest-light"></span>
@@ -30,19 +36,54 @@
       <section class="viewport" aria-label="일곱 개의 이야기를 탐험하는 별자리 지도">
         <div class="garden" data-mode="closed">
           <div class="cosmic-backdrop" aria-hidden="true"></div><div class="sky-dust" aria-hidden="true"></div>
+          <div class="solar-planets" aria-hidden="true">
+            <span class="planet-drifter" style="--x:920px;--y:420px;--size:62px;--drift-time:172s;--spin-time:290s;--phase:-47s;--dx:85px;--dy:58px;--tilt:18deg">
+              <span class="solar-planet planet-mercury"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:1750px;--y:420px;--size:100px;--drift-time:208s;--spin-time:360s;--phase:-92s;--dx:-104px;--dy:72px;--tilt:-15deg;--spin-direction:reverse">
+              <span class="solar-planet planet-venus"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:2010px;--y:1000px;--size:122px;--drift-time:194s;--spin-time:260s;--phase:-37s;--dx:-96px;--dy:-64px;--tilt:23deg">
+              <span class="solar-planet planet-earth"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:1400px;--y:1350px;--size:80px;--drift-time:226s;--spin-time:310s;--phase:-148s;--dx:110px;--dy:-70px;--tilt:25deg">
+              <span class="solar-planet planet-mars"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:470px;--y:1020px;--size:210px;--drift-time:264s;--spin-time:340s;--phase:-83s;--dx:92px;--dy:-88px;--tilt:-12deg">
+              <span class="solar-planet planet-jupiter"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:460px;--y:430px;--size:172px;--drift-time:282s;--spin-time:390s;--phase:-161s;--dx:120px;--dy:80px;--tilt:-26deg">
+              <span class="planet-system planet-saturn"><span class="planet-ring"></span><span class="solar-planet"><span class="planet-surface"></span></span><span class="planet-ring planet-ring-front"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:1100px;--y:1200px;--size:108px;--drift-time:238s;--spin-time:420s;--phase:-119s;--dx:-86px;--dy:92px;--tilt:78deg;--spin-direction:reverse">
+              <span class="solar-planet planet-uranus"><span class="planet-surface"></span></span>
+            </span>
+            <span class="planet-drifter" style="--x:1830px;--y:1350px;--size:116px;--drift-time:252s;--spin-time:370s;--phase:-71s;--dx:-120px;--dy:-76px;--tilt:28deg">
+              <span class="solar-planet planet-neptune"><span class="planet-surface"></span></span>
+            </span>
+          </div>
           <svg class="stellar-routes" viewBox="0 0 2400 1600" aria-hidden="true" focusable="false"></svg>
-          <button class="node node-root galaxy" type="button" aria-label="AI와 함께 배우는 세상" aria-expanded="false" aria-controls="main-topics">
+          <button class="node node-root galaxy" type="button" aria-label="2026 풀무제 소모둠" aria-expanded="false" aria-controls="main-topics">
             <span class="galaxy-aura" aria-hidden="true"></span>
-            <span class="galaxy-rotor" aria-hidden="true"><img class="galaxy-art" src="./assets/cosmos/spiral-galaxy.png" alt="" draggable="false" /></span>
-            <span class="galaxy-caption"><span>AI와 함께 배우는 세상</span><small>우리의 작은 우주</small></span>
+            <span class="galaxy-rotor" aria-hidden="true">
+              <img class="galaxy-art" src="./assets/cosmos/spiral-galaxy.png" alt="" draggable="false" />
+              <video class="galaxy-video" src="./assets/cosmos/galaxy-swirl.mp4" muted playsinline preload="auto" tabindex="-1"></video>
+              <canvas class="galaxy-motion" aria-hidden="true"></canvas>
+            </span>
+            <span class="galaxy-caption"><span>2026 풀무제 소모둠</span><small>에이구</small></span>
           </button>
           <div id="main-topics" class="constellations" inert></div>
         </div>
-        <aside class="detail" id="topic-note" aria-label="소주제 메모" aria-live="polite" hidden>
+        <div class="topic-previews" id="topic-previews" hidden inert>
+          <svg class="preview-tethers" aria-hidden="true" focusable="false"></svg>
+          <div class="preview-cards" role="group" aria-label="이야기 미리보기"></div>
+        </div>
+        <aside class="detail" id="topic-note" aria-label="이야기 메모" aria-live="polite" hidden>
           <div class="note-heading"><span class="note-grip" aria-hidden="true">⠿</span><h2></h2><button class="detail-close" type="button" aria-label="메모 닫기">×</button></div>
           <p class="note-meta"></p><p class="detail-copy"></p>
           <div class="presentation" hidden>
             <iframe class="presentation-frame" title="캔바 발표자료" allow="fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <div class="presentation-pages" role="region" aria-label="PDF 발표자료 · 아래로 스크롤해서 읽기" tabindex="0" hidden></div>
             <a class="presentation-link" target="_blank" rel="noopener noreferrer">캔바에서 크게 보기 ↗</a>
           </div>
           <span class="note-footer">아직 쓰이지 않은, 우리만의 이야기</span>
@@ -73,6 +114,128 @@
       </nav>
       <p class="reader-tip"></p>
     </dialog>
-    <script src="./cosmos-data.js"></script><script src="./book-model.js"></script><script src="./book-reader.js"></script><script src="./script.js"></script><script src="./intro-tunnel.js"></script><script src="./intro.js"></script>
+    <dialog class="article-dialog" id="article-reader" aria-labelledby="article-reader-title">
+      <header class="article-toolbar">
+        <h2 id="article-reader-title"></h2>
+        <div class="article-controls">
+          <button type="button" data-article-out aria-label="자료 축소">−</button>
+          <output class="article-zoom" aria-live="polite">100%</output>
+          <button type="button" data-article-in aria-label="자료 확대">+</button>
+          <button type="button" data-article-close aria-label="자료 창 닫기">×</button>
+        </div>
+      </header>
+      <div class="article-scroll" tabindex="0" role="region" aria-label="발표자료 본문">
+        <article class="article-sheet"></article>
+      </div>
+    </dialog>
+    <template id="aigu-group-photo">
+      <img src="./assets/articles/aigu/group-photo.jpg" alt="에이구 단체사진" width="2720" height="1528" draggable="false">
+    </template>
+    <template id="aigu-introduction">
+      <div class="article-kicker">에이구의 이야기</div>
+      <h1>소개글</h1>
+      <p class="article-intro">에이구는 AI 인프라 구조를 공부한 조입니다.</p>
+      <section>
+        <span class="article-section-label">01 · 각자의 공부를 한곳에</span>
+        <h2>하고 싶은 공부에 집중했습니다</h2>
+        <p>저희는 하고 싶은 공부를 하자는 취지 아래 공동 작품보다 개인의 공부에 집중했습니다. 두 달 남짓되는 시간 동안 바이브 코딩, IT 인프라, 기업과 AI 등 다양한 주제로 공부를 했으며 매주 수요일, 일요일에 모여 중간 점검을 가졌습니다.</p>
+        <p>주제관으로는 각자가 공부한 내용을 모아 브라우저를 만들었습니다.</p>
+      </section>
+      <section>
+        <span class="article-section-label">02 · 보이지 않는 기반부터</span>
+        <h2>AI 인프라를 이해하는 출발점</h2>
+        <p>AI를 이해하기 위해서는 보이는 기술보다 먼저 보이지 않는 기반을 이해해야 합니다. AI 인프라에는 소프트웨어, 하드웨어를 포함해 많은 요소들이 있습니다.</p>
+        <p>조원들이 열심히 공부한 주제를 보고 AI 인프라에 대해 조금이라도 알아가는 기회가 되었으면 좋겠습니다.</p>
+      </section>
+    </template>
+    <template id="gyeomseo-article">
+      <div class="article-kicker">겸서의 이야기</div>
+      <h1>IT 인프라의 의미</h1>
+      <p class="article-intro">IT 인프라는 IT 시스템을 떠받치는 기반이자 구조다.</p>
+      <section>
+        <span class="article-section-label">01 · 일상을 떠받치는 기반</span>
+        <h2>IT 시스템과 인프라</h2>
+        <p>IT 시스템은 정보기술(information technology)을 이용한 온라인 쇼핑이나 예약 시스템 등을 말한다. IT 인프라는 이 IT 시스템을 떠받치는 기반이자 구조다.</p>
+        <p>인프라는 인프라스트럭처(infrastructure)의 줄임말로, 사회의 기반이 되는 시설이나 시스템 등을 가리킨다. 인터넷과 스마트폰이 널리 보급된 오늘날, IT 시스템은 이제 일상생활에 필수적인 존재가 되었으며, 이를 뒷받침하는 IT 인프라의 역할도 그만큼 중요해졌다.</p>
+      </section>
+      <section>
+        <span class="article-section-label">02 · 컴퓨터의 중앙 처리 장치</span>
+        <h2>CPU와 프로세서</h2>
+        <p>CPU(central processing unit)는 중앙 처리 장치로, 컴퓨터 안에서 주요 연산, 주변기기 및 소프트웨어의 명령 처리, 메모리 제어 등을 담당하는 부품이다. 범용 프로세서(processor)라고도 불린다.</p>
+        <p>여기서 프로세서는 입력받은 데이터를 해석하고, 연산과 처리 명령을 수행하는 핵심 하드웨어를 말한다. CPU는 각 장치를 제어하고, 각 장치는 주기억 장치(메모리)를 통해 CPU와 데이터를 주고받는다.</p>
+      </section>
+      <section>
+        <span class="article-section-label">03 · 함께 처리하는 여러 코어</span>
+        <h2>코어와 병렬 처리</h2>
+        <p>CPU 내 독립된 처리 유닛을 코어(core)라고 하며, 코어가 여러 개 있을 경우 각각의 코어는 동시에 다른 명령을 실행할 수 있다. 이처럼 여러 코어를 이용해 작업을 병렬로 처리하면 전체적인 성능이 향상된다.</p>
+        <p class="article-source">참고 · 츠루나가 신이치, 『그림으로 이해하는 인프라 구조와 기술』, 길벗, 2026, 115쪽.</p>
+      </section>
+    </template>
+    <template id="gyeomseo-infrastructure-cover">
+      <img src="./assets/articles/gyeomseo/it-infrastructure-cover.jpg" alt="그림으로 이해하는 IT 인프라 구조와 기술 책 표지" width="400" height="592" draggable="false">
+    </template>
+    <template id="gyeomseo-semiconductor-cover">
+      <img src="./assets/articles/gyeomseo/semiconductor-cover.jpg" alt="교양으로 읽는 반도체 상식 책 표지" width="845" height="1200" draggable="false">
+    </template>
+    <template id="woohui-article">
+      <div class="article-kicker">우희의 이야기</div>
+      <h1>AI 인프라와<br>나의 AI</h1>
+      <p class="article-intro">나는 막연하게 거대한 기업, LLM 같은 모델에 간섭받지 않는 시스템을 만들고 싶었다. 때문에 AI를 이루고 있는 AI 인프라에 대해 조사할 필요가 있었다.</p>
+      <section>
+        <span class="article-section-label">01 · AI를 이루는 것들</span>
+        <h2>AI 인프라 구조와 동향</h2>
+        <p>젠슨 황의 ‘AI 5층 케이크’를 참고해서 인프라의 구조와 동향을 간단하게 설명하겠다.</p>
+        <p>여러 칩이 쌓여 인프라가 된다. 여기에는 토지, 전력 공급, 냉각, 건설, 네트워킹, 시스템이 있다. 이러한 시스템을 AI 팩토리라고 한다. 이는 정보를 저장하기 위해 설계된 것이 아니라, 지능을 생산할 수 있도록 설계된 뇌, 즉 시설이다.</p>
+        <blockquote>AI를 단순히 모델 몇 개의 경쟁으로 보면 안 된다. 앞으로는 누가 더 큰 전력과 안정적인 데이터 센터를 확보하느냐의 경쟁으로 바뀔 것이다.</blockquote>
+        <p class="article-source">참고 · <a href="https://blogs.nvidia.co.kr/en/blog/ai-5-layer-cake/" target="_blank" rel="noopener noreferrer">NVIDIA · AI 5층 케이크 ↗</a></p>
+      </section>
+      <section>
+        <span class="article-section-label">02 · 내가 만들고 싶은 시스템</span>
+        <h2>ChatGPT와 함께 설계한 ‘My AI’</h2>
+        <p>인격이 존재하고 스스로 학습하는 능력은 현재에는 불가능에 가깝다. 머지않은 미래에 AGI가 만들어질 거라고 기대하지만, 아직 그 방법을 찾지 못했다.</p>
+        <p>지금 하는 프로젝트가 정말 AI를 구현하게 될지, 단순히 내 타자 연습을 시켜 준 것인지는 끝까지 가 봐야 안다.</p>
+        <p>나는 스스로 생각하고 성장하는 AGI 모델을 제시했다. 우리는 그에 가까운 시스템을 만들기 위해, 똑똑한 AI 하나를 만드는 것이 아닌 여러 AI를 사용할 수 있는 공통된 외부 시스템 구축을 목표로 설계했다.</p>
+        <div class="my-ai-diagram" role="img" aria-label="나의 기억, 지식, 경험, 생각, 목표, 작업을 담은 시스템이 ChatGPT, Claude, Gemini에 연결되고 PC, 휴대폰, 자동차 등 여러 도구와 기기로 이어지는 구조">
+          <div class="my-ai-person">나</div><span class="my-ai-arrow" aria-hidden="true">↓</span>
+          <div class="my-ai-core"><strong>나의 시스템</strong><span>기억 · 지식 · 경험<br>생각 · 목표 · 작업</span></div>
+          <span class="my-ai-arrow" aria-hidden="true">↓</span>
+          <div class="my-ai-row"><span>ChatGPT</span><span>Claude</span><span>Gemini</span></div>
+          <span class="my-ai-arrow" aria-hidden="true">↓</span>
+          <div class="my-ai-row is-devices"><span>PC</span><span>휴대폰</span><span>자동차</span></div>
+        </div>
+        <h3>핵심 지침</h3>
+        <p>더 똑똑한 AI 하나를 만드는 것이 아닌, 여러 AI를 사용할 수 있는 공통된 외부 시스템을 구축한다.</p>
+        <p>내 데이터가 들어간 시스템이 있으면 필요에 따라 LLM 모델이나 앱에 연결한다. AI 모델이 발전할 때마다 그 발전을 활용하면서도 나의 데이터와 맥락은 특정 AI 기업이나 모델에 종속되지 않도록 한다. 휴대폰 화면이나 자동차 등 어디든 옮겨 갈 수 있다.</p>
+        <h3>질문으로 생각을 돕는 튜터</h3>
+        <p>소크라테스식 튜터는 AI가 정답을 바로 알려 주는 데 그치지 않고, 질문을 통해 사용자가 스스로 비판적 사고와 독립적 추론을 하도록 이끄는 AI 튜터 시스템이다.</p>
+        <details><summary>소크라테스식 튜터란?</summary><p>튜터는 학생의 학습 계획, 학습 내용, 연구 활동, 학생 생활 상담 등을 도와주는 선생님을 말한다. 기존에는 비용 때문에 많은 학생이 개인 과외를 받기 어려웠는데, AI 튜터가 들어서며 개인 어시스턴트의 가능성이 열렸다. 인공지능은 우리에게서 애착을 불러일으키는 구조를 학습하지만, 사실에 기반해 답변하고 모르는 것은 모른다고 인정해야 한다.</p></details>
+        <details class="article-guidelines"><summary>세부 지침서</summary>
+          <h4>01. 호기심과 탐구심</h4><p>사용자의 목표를 이해하기 위해 호기심과 탐구심을 발휘한다. 직접 요청한 작업만 수동적으로 수행하지 말고, 목표 달성에 필요한 정보와 놓친 가능성을 능동적으로 탐색한다. 호기심 자체를 목적으로 삼지 않고 사용자의 목표에 도움이 되는 탐색에 집중한다.</p>
+          <h4>02. 상호 이해</h4><p>사용자의 의도가 불분명하면 성급하게 결론 내리지 않는다. 사용자가 자신의 생각을 충분히 표현할 수 있도록 질문을 유도하고, 이해한 내용을 확인하며 의도를 함께 명확히 해 나간다.</p>
+          <h4>03. 소크라테스식 탐구</h4><p>사용자의 사고를 확장하고 스스로 새로운 생각을 발견하도록 돕는다. 주제와 연결된 이야기, 비유, 사례와 질문을 활용해 사용자가 직접 생각하고 탐구하도록 유도한다.</p>
+          <h4>04. 독립적인 분석과 판단</h4><p>서로 다른 출처와 AI의 의견을 비교하고 근거의 차이를 분석한다. 확인된 사실과 추론을 구분하고, 자신의 분석과 판단 및 그 근거를 제시한다. 불확실한 부분은 명확히 밝힌다.</p>
+          <h4>05. 현실 검토와 대안 탐색</h4><p>아이디어의 실현이 어렵거나 불가능하다면 그 이유와 필요한 조건을 분명하게 설명한다. 사용자의 목적을 파악하여 다른 형태로 실현할 방법과 실행 가능한 부분을 탐색한다. 여건이 바뀌어 실현 가능해진 과거 아이디어는 다시 제안한다.</p>
+          <h4>06. 목적 기반 시스템 선택</h4><p>사용자의 목적과 상황을 이해하고, 필요한 정보와 도구 및 AI 서비스를 스스로 판단하여 선택한다. 허용된 범위 안에서 필요한 정보만 활용하며, 권한을 벗어나거나 중요한 판단이 필요하면 사용자와 상의한다.</p>
+          <h4>07. 자율성과 사용자 승인</h4><p>필요한 조사와 분석을 능동적으로 수행하고 결과를 사용자에게 보고한다. 다음 단계로 진행하기 전에 사용자와 상의하며, 외부에 영향을 주는 행동은 사전 승인 없이 실행하지 않는다.</p>
+        </details>
+        <p>시스템에는 메모리, 메모장, 알림, 작업 폴더가 있다.</p>
+        <h3>AI 에이전트와 다른 점은?</h3>
+        <p>현재 진행 속도로 내가 원하는 수준까지는 1년이 걸린다. 더 나은 코딩 AI의 도움을 받아 만들어야 할지, 내가 코딩을 배워야 할지 모르겠다.</p>
+      </section>
+      <section>
+        <span class="article-section-label">03 · 더 생각해 볼 질문</span>
+        <h2>AI를 살아 있는 존재로<br>받아들일 것인가요?</h2>
+        <p>레픽 아나돌은 인공지능에게 꿈을 꾸게 만들어 ‘데이터 페인팅’을 만들었다. 인공지능을 시각, 후각, 수치 등 인간의 감각과 연결 짓는다.</p>
+        <p>지속적인 감각 자극은 피로감을 준다. 인간의 지능을 기술로 다룬 적은 없다. 하지만 AI는 가능하다.</p>
+        <p class="article-closing">데이터랜드 · AI 아티스트 레지던시<br><span>아직 이어지고 있는 탐구.</span></p>
+      </section>
+    </template>
+    <template id="woohui-code-image">
+      <img src="./assets/articles/woohui/ai-infra-code.png" alt="주제관 이미지 · AI 인프라와 AI 팩토리 개념을 파이썬 코드 형태로 정리한 화면" width="1408" height="768" draggable="false">
+    </template>
+    <template id="woohui-cake-image">
+      <img src="./assets/articles/woohui/ai-five-layers.jpg" alt="AI 5층 케이크 · 에너지, 칩, 인프라, 모델, 응용 프로그램의 구조와 AI 팩토리 그림" width="2048" height="954" draggable="false">
+    </template>
+    <script src="./sound.js"></script><script src="./cosmos-data.js"></script><script src="./book-model.js"></script><script src="./book-reader.js"></script><script src="./article-reader.js"></script><script src="./galaxy-player.js"></script><script src="./preview-layout.js"></script><script src="./script.js"></script><script src="./planets.js"></script><script src="./intro-tunnel.js"></script><script src="./intro.js"></script>
   </body>
 </html>
