@@ -7,7 +7,19 @@
   const flights = new Map(), pending = new Map();
   const random = (min, max) => min + Math.random() * (max - min);
   const reduced = () => document.documentElement.dataset.ambientMotion === 'reduced';
+  let entryEdges = [];
   let started = false;
+
+  function nextEntryEdge() {
+    if (!entryEdges.length) {
+      entryEdges = ['top', 'bottom', 'left', 'right'];
+      for (let i = entryEdges.length - 1; i > 0; i--) {
+        const j = Math.floor(random(0, i + 1));
+        [entryEdges[i], entryEdges[j]] = [entryEdges[j], entryEdges[i]];
+      }
+    }
+    return entryEdges.pop();
+  }
 
   function schedule(planet, delay) {
     const item = { remaining: delay, due: 0, timer: 0 };
@@ -26,15 +38,19 @@
     const map = garden.getBoundingClientRect();
     const scale = map.width / garden.offsetWidth;
     if (!scale || !view.width || !view.height) return;
-    const corner = Math.floor(random(0, 4));
-    const right = corner % 2 === 1, bottom = corner >= 2;
-    // Begin wholly outside a random corner, then follow a shallow curve
-    // to the opposite edge. Convert screen coordinates to the map's space.
+    const edge = nextEntryEdge();
+    // Each shuffled group uses all four edges once, with independent entry
+    // and exit positions along those edges. Convert to the map's space.
     const padding = 42;
-    const start = { x: right ? view.width + padding : -padding, y: bottom ? view.height + padding : -padding };
-    const end = { x: right ? -padding : view.width + padding, y: bottom ? -padding : view.height + padding };
-    const bend = random(-.18, .18);
-    const control = { x: view.width * (.5 + bend), y: view.height * (.5 - bend) };
+    let start, end;
+    if (edge === 'top' || edge === 'bottom') {
+      start = { x: view.width * random(.08, .92), y: edge === 'top' ? -padding : view.height + padding };
+      end = { x: view.width * random(.08, .92), y: edge === 'top' ? view.height + padding : -padding };
+    } else {
+      start = { x: edge === 'left' ? -padding : view.width + padding, y: view.height * random(.08, .92) };
+      end = { x: edge === 'left' ? view.width + padding : -padding, y: view.height * random(.08, .92) };
+    }
+    const control = { x: view.width * random(.3, .7), y: view.height * random(.3, .7) };
     const frames = Array.from({ length: 41 }, (_, index) => {
       const t = index / 40, u = 1 - t;
       const x = u*u*start.x + 2*u*t*control.x + t*t*end.x;
@@ -45,7 +61,7 @@
         opacity: index === 0 || index === 40 ? 0 : 1,
       };
     });
-    planet.dataset.entryCorner = ['top-left', 'top-right', 'bottom-left', 'bottom-right'][corner];
+    planet.dataset.entryEdge = edge;
     planet.classList.add('is-travelling');
     const animation = planet.animate(frames, { duration: random(145000, 225000), easing: 'linear' });
     flights.set(planet, animation);
@@ -71,6 +87,7 @@
     });
   }
   function reset() {
+    entryEdges = [];
     pending.forEach(item => clearTimeout(item.timer));
     pending.clear();
     flights.forEach(animation => animation.cancel());
