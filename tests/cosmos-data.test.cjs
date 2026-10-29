@@ -35,7 +35,7 @@ for (const topic of topics) {
       }
     }
     assert.equal(seen.size, topic.points.length);
-    const storyCount = ['sangmok', 'gyeongchan'].includes(topic.id) ? 1 : 3;
+    const storyCount = {hanul:1, sangmok:1, seungwon:2, gyeongchan:1}[topic.id] || 3;
     assert.equal(topic.stars.length, storyCount);
     assert.equal(new Set(topic.stars.map(s => s.anchor)).size, storyCount);
     assert.equal(topic.stars.filter(s => s.bayer.startsWith('α')).length, 1);
