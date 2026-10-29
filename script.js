@@ -187,6 +187,7 @@
     } else {
       const paper = document.createElement('div');
       paper.className = star.article ? 'preview-paper' : 'preview-placeholder';
+      if (star.article && star.article.layout !== 'image') paper.classList.add('preview-code');
       const title = document.createElement('strong');
       title.textContent = star.article?.title || '새로운 이야기를 기다리는 별';
       const copy = document.createElement('span');

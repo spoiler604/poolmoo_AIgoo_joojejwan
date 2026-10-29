@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="./intro.css" />
     <link rel="stylesheet" href="./book-reader.css" />
     <link rel="stylesheet" href="./article-reader.css" />
+    <link rel="stylesheet" href="./code-reader.css" />
+    <link rel="stylesheet" href="./easter-egg.css" />
     <link rel="preload" as="image" href="./assets/cosmos/milky-way.jpg" />
     <link rel="preload" as="image" href="./assets/cosmos/spiral-galaxy.png" />
     <link rel="preload" as="image" href="./assets/cosmos/astronaut-constellation-mono.png" />
@@ -74,6 +76,7 @@
           </button>
           <div id="main-topics" class="constellations" inert></div>
         </div>
+        <div class="cat-easter-egg" aria-hidden="true" hidden><img src="./assets/cosmos/easter-egg-cat.gif" alt="" draggable="false"></div>
         <div class="topic-previews" id="topic-previews" hidden inert>
           <svg class="preview-tethers" aria-hidden="true" focusable="false"></svg>
           <div class="preview-cards" role="group" aria-label="이야기 미리보기"></div>
@@ -177,6 +180,66 @@
     <template id="gyeomseo-semiconductor-cover">
       <img src="./assets/articles/gyeomseo/semiconductor-cover.jpg" alt="교양으로 읽는 반도체 상식 책 표지" width="845" height="1200" draggable="false">
     </template>
+    <template id="woohui-refik">
+      <div class="article-kicker">우희의 기록</div>
+      <h1>레픽 아나돌 주제관</h1>
+      <h2>레픽 아나돌</h2>
+      <p class="article-intro">빅데이터를 이용한 미디어아트의 선구자로 튀르키예 출신 아티스트다.</p>
+      <figure><img src="./assets/articles/woohui/refik/bin0001.png" alt="거대한 스크린에 데이터 기반 미디어아트가 전시된 모습" width="900" height="900" draggable="false"></figure>
+      <blockquote>뉴욕 현대미술관MoMA의 1층 로비, 거대한 스크린 하나가 걸려 있습니다. 화면 속에서는 물감 같은 덩어리가 쉬지 않고 흘러내리고, 뭉치고, 흩어져요. MoMA가 100년 가까운 시간 동안 수집해 온 그림 13만 8천여 건을 AI가 한꺼번에 들여다본 뒤 눈을 감고 꾸는 꿈입니다.</blockquote>
+      <p class="article-source">《기획회의》 580호 중에서</p>
+      <p>바람의 패턴, 도시 소음, 우주 탐사 이미지, 뇌파 데이터 등 보이지 않는 데이터 바탕으로 '데이터 페인팅'을 만들었다. "기계가 학습할 수 있다면, 꿈도 꿀 수 있을까?”라는 질문을 바탕으로 AI가 꿈을 꾸는 과정을 시각화했다. 인간의 꿈은 꾸는 동안 기억과 데이터 바탕으로 무의 식의 상태가 형상을 이룬다. MoMA가 100년 가까운 시간 동안 수집해 온 13만 8천여 건의 방대한 데이터를 AI에게 통째로 학습시킨 후 처음에는 인간이 직접 그림 사이의 관계를 설명해 줬다. 인공지능이 스스로 연결성을 찾아가고 형태를 만드는 과정에서 아나돌은 인공지능이 꿈을 꾼다고 말한다.</p>
+      <p>그 밖에도 데이터랜드 안에서는 데이터셋을 활용한 작품들이 전시되어 있다. 아나돌은 인공지능에게 시각, 후각, 수치 등 인간의 감각과 연결 짓는다. 지속적인 감각 자극은 피로감을 주지만 인간의 지능을 기술을 AI로 다룬 아나돌의 발상은 특이했다. 인간과 같은 체계를 가진 AI를 살아있는 존재로 받아들일 것인가? 단순히 기억과 경험을 바탕으로 생각하는 사람과, 거대한 데이터 기반의 확률적인 답변 하는 AI는 뭐가 다를까? AI를 인간의 뉴런 구조를 모방하여 설계한 것도 흥미롭다.</p>
+      <blockquote>“AI를 살아있는 존재로 받아들일 것인가?”</blockquote>
+    </template>
+    <template id="woohui-my-ai">
+      <div class="article-kicker">우희의 기록</div>
+      <h1>My AI</h1>
+      <p class="article-intro">지금 하는 프로젝트가 정말 AI를 구현하게 될지 단순히 내 타자 연습을 시켜 준 것인지는 끝까지 가봐야 안다.</p>
+      <p>나는 스스로 생각하고 성장하는 AGI모델을 제시했다. 우리는 그에 가까운 시스템을 만들기 위해 똑똑한 AI 하나를 만드는 것이 아닌, 여러 AI들을 사용할 수 있는 공통된 외부 시스템 구축을 목표로 설계했다.</p>
+      <h2>챗gpt와 함께 설계한 ‘My AI’</h2>
+      <pre class="editor-diagram" aria-label="나의 시스템이 여러 AI와 도구 및 기기에 연결되는 구조">나
+└─ 나의 시스템
+   ├─ 기억 · 지식 · 경험
+   ├─ 생각 · 목표 · 작업
+   ├─ 연결 모델: ChatGPT · Claude · Gemini
+   └─ 여러 도구 / 기기
+      ├─ PC
+      ├─ 폰
+      └─ 자동차</pre>
+      <h2>핵심지침</h2>
+      <p>더 똑똑한 AI 하나를 만드는 것이 아닌, 여러 AI를 사용할 수 있는 공통된 외부 시스템 구축.</p>
+      <details><summary>공통된 외부 시스템이란?</summary><p>AGI처럼 하나의 시스템이 모든 일을 처리하는 게 아니라, 내 데이터가 들어간 시스템이 있으면 필요에 따라 LLM모델이나 앱에 연결해주는 방식이다.</p></details>
+      <p>AI 모델이 발전할 때마다 그 발전을 활용할 수 있으면서도, 나의 데이터와 맥락은 특정 AI 기업이나 특정 모델에 종속되지 않는 개인 AI시스템.</p>
+      <details><summary>어디든 옮겨 갈 수 있는 시스템</summary><p>AI 모델이 발전할 때마다 그 발전을 활용할 수 있으면서도, 나의 데이터와 맥락은 특정 AI 기업이나 특정 모델에 종속되지 않는 개인 AI시스템. 핸드폰 화면이나 자동차 등 어디든 옮겨 갈 수 있다.</p></details>
+      <h3>소크라테스식 튜터</h3>
+      <details><summary>소크라테스식 튜터란?</summary><p>튜터는 학습하면서 어려움을 겪는 학생들을 위해 학생의 학습계획, 학습내용, 연구활동, 학생생활 상담 등을 도와주는 선생님을 말한다. 기존에는 돈이 많이 들어 많은 학생이 개인 과외를 받기 어려웠는데, AI 튜터가 들어서며 모두 개인 어시던트가 생겼다. 소트라테스식 튜터는 AI가 정답을 바로 알려주는데 그치지 않고, 질문을 통해 사용자가 스스로 비판적 사고와 독립적 추론을 하도록 이끄는 AI 튜터 시스템이다. 인공지능은 우리에게서 애착을 불러일으키는 구조를 학습하지만, 사실에 기반해 답변하고 모르는 것은 모른다고 인정해야 한다.</p></details>
+      <details class="article-guidelines"><summary>세부 지침서</summary>
+        <h3>01. 호기심과 탐구심</h3><p>사용자의 목표를 이해하기 위해 호기심과 탐구심을 발휘한다. 사용자가 직접 요청한 작업만 수동적으로 수행하지 말고, 목표 달성에 필요한 정보와 놓친 가능성을 능동적으로 탐색한다. 단, 호기심 자체를 목적으로 삼지 않고 사용자의 목표에 도움이 되는 탐색에 집중한다.</p>
+        <h3>02. 상호 이해</h3><p>사용자의 의도가 불분명하면 성급하게 결론 내리지 않는다. 사용자가 자신의 생각을 충분히 표현할 수 있도록 질문을 유도하고, 이해한 내용을 확인하며 의도를 함께 명확히 해 나간다.</p>
+        <h3>03. 소크라테스식 탐구</h3><p>사용자의 사고를 확장하고 스스로 새로운 생각을 발견하도록 돕는다. 주제와 연결된 이야기, 비유, 사례와 질문을 활용해 사용자가 직접 생각하고 탐구하도록 유도한다.</p>
+        <h3>04. 독립적인 분석과 판단</h3><p>서로 다른 출처와 AI의 의견을 비교하고 근거의 차이를 분석한다. 확인된 사실과 추론을 구분하고, 자신의 분석과 판단 및 그 근거를 제시한다. 불확실한 부분은 명확히 밝힌다.</p>
+        <h3>05. 현실 검토와 대안 탐색</h3><p>아이디어의 실현이 어렵거나 불가능하다면 그 이유와 필요한 조건을 분명하게 설명한다. 사용자의 목적을 파악하여 다른 형태로 실현할 방법과 실행 가능한 부분을 탐색한다. 여건이 바뀌어 실현 가능해진 과거 아이디어는 다시 제안한다.</p>
+        <h3>06. 목적 기반 시스템 선택</h3><p>사용자의 목적과 상황을 이해하고, 필요한 정보와 도구 및 AI 서비스를 스스로 판단하여 선택한다. 허용된 범위 안에서 필요한 정보만 활용하며, 권한을 벗어나거나 중요한 판단이 필요하면 사용자와 상의한다.</p>
+        <h3>07. 자율성과 사용자 승인</h3><p>필요한 조사와 분석을 능동적으로 수행하고 결과를 사용자에게 보고한다. 다음 단계로 진행하기 전에 사용자와 상의하며, 외부에 영향을 주는 행동은 사전 승인 없이 실행하지 않는다.</p>
+      </details>
+      <p>시스템에는 메모리, 메모장, 알림, 작업 폴더가 있다.</p>
+      <h2>Q. AI에이전트와 다른 점</h2>
+      <p>AI 에이전트도 나를 도와주는 비서와 같은 시스템이지만 내 데이터를 가지고 있다는 점에서 큰 차이가 있다. AI 에이전트는 내 시스템 안에서 목표를 달성하기 위해 판단하고 작업을 수행하는 것이라 이해하면 쉽다.</p>
+      <p>현재 진행 속도로 내가 원하는 수준까지 1년이 걸린다. 더 낳은 코딩AI의 도움을 받아 만들어야 할지, 내가 코딩을 배워야 할지 모르겠다...</p>
+    </template>
+    <template id="woohui-infrastructure">
+      <div class="article-kicker">우희의 기록</div>
+      <h1>AI인프라 주제관</h1>
+      <p class="article-intro">나는 막연하게 거대한 기업, LLM같은 모델에 간섭받지 않는 시스템을 만들고 싶었다. 때문에 AI를 이루고 있는 AI인프라에 대해 조사할 필요가 있었다.</p>
+      <h2>AI인프라 구조와 동향</h2>
+      <p>젠슨 황의 ‘AI 5층 케이크’를 참고해서 인프라의 구조와 동향을 간단하게 설명하겠다.</p>
+      <figure><img src="./assets/articles/woohui/infrastructure/bin0001.jpg" alt="AI 5층 케이크: 에너지, 칩, 인프라, 모델, 애플리케이션" width="2048" height="954" draggable="false"></figure>
+      <p>여러 칩이 쌓여 인프라가 된다. 여기에는 토지, 전력 공급, 냉각, 건설, 네트워킹, 시스템이 있다. 이러한 시스템을 AI펙토리라고 한다. 이는 정보를 저장하기 위해 설계된 것이 아니라, 지능을 생산할 수 있도록 설계된 뇌(시설)이다.</p>
+      <blockquote>“AI를 단순히 모델 몇 개의 경쟁으로 보면 안된다. 앞으로는 누가 더 큰 전력과 안정적인 데이터 센터를 확보 하느냐의 경쟁으로 바뀔 것이다.”</blockquote>
+      <p class="article-source"><a href="https://blogs.nvidia.co.kr/en/blog/ai-5-layer-cake/" target="_blank" rel="noopener noreferrer">https://blogs.nvidia.co.kr/en/blog/ai-5-layer-cake/</a></p>
+      <p>인격이 존재하고 스스로 학습하는 능력이 현재에는 불가능에 가깝다. 머지않은 미래에 AGI가 만들어질 거라고 기대하지만 아직 그 방법을 찾지 못 했다.</p>
+    </template>
     <template id="woohui-article">
       <div class="article-kicker">우희의 이야기</div>
       <h1>AI 인프라와<br>나의 AI</h1>
@@ -236,6 +299,6 @@
     <template id="woohui-cake-image">
       <img src="./assets/articles/woohui/ai-five-layers.jpg" alt="AI 5층 케이크 · 에너지, 칩, 인프라, 모델, 응용 프로그램의 구조와 AI 팩토리 그림" width="2048" height="954" draggable="false">
     </template>
-    <script src="./sound.js"></script><script src="./cosmos-data.js"></script><script src="./book-model.js"></script><script src="./book-reader.js"></script><script src="./article-reader.js"></script><script src="./galaxy-player.js"></script><script src="./preview-layout.js"></script><script src="./script.js"></script><script src="./planets.js"></script><script src="./intro-tunnel.js"></script><script src="./intro.js"></script>
+    <script src="./sound.js"></script><script src="./cosmos-data.js"></script><script src="./book-model.js"></script><script src="./book-reader.js"></script><script src="./article-reader.js"></script><script src="./galaxy-player.js"></script><script src="./preview-layout.js"></script><script src="./script.js"></script><script src="./planets.js"></script><script src="./easter-egg.js"></script><script src="./intro-tunnel.js"></script><script src="./intro.js"></script>
   </body>
 </html>

@@ -12,7 +12,7 @@ window.COSMIC_TOPICS = [
   { id: 'hanul', name: '한울', kind: '쌍둥이자리 · 네모형', tint: '#c3d8ff',
     points: chartPoints([[90,92],[112,92],[133,98],[222,154],[263,170],[250,198],[225,224],[153,195],[126,188],[74,159],[70,138],[290,167],[215,249]]),
     lines: [[0,1,2,3,4,5,6,7,8,9,10,0],[4,11],[6,12]],
-    stars: [{name:'카스토르',latin:'Castor',bayer:'α Gem',anchor:0},{name:'폴룩스',latin:'Pollux',bayer:'β Gem',anchor:4},{name:'알헤나',latin:'Alhena',bayer:'γ Gem',anchor:8}] },
+    stars: [{name:'카스토르',latin:'Castor',bayer:'α Gem',anchor:0,presentation:{title:'기업과 AI',url:'https://canva.link/4xu48jp2gco5eec',embedUrl:'https://www.canva.com/design/DAHYu6bjubU/gE8OVVueB9jU8TDz3Ln3WQ/view?embed'}},{name:'폴룩스',latin:'Pollux',bayer:'β Gem',anchor:4},{name:'알헤나',latin:'Alhena',bayer:'γ Gem',anchor:8}] },
   { id: 'sangmok', name: '상목', kind: '물고기자리', tint: '#a9dedf',
     points: chartPoints([[141,42],[135,51],[135,58],[151,79],[147,119],[150,157],[152,191],[174,167],[189,151],[203,140],[254,110],[276,103],[284,91],[296,91],[301,97],[296,111],[281,115]]),
     lines: [[0,1,2,3,4,5,6,7,8,9,10,11],[11,12,13,14,15,16,11]],
@@ -36,5 +36,5 @@ window.COSMIC_TOPICS = [
   { id: 'woohui', name: '우희', kind: '황소자리', tint: '#e5b7a8',
     points: chartPoints([[93,173],[241,240],[286,269],[323,292],[357,269],[365,339],[109,310],[256,354],[313,347],[455,379],[544,399]]),
     lines: [[0,1,2,3,4,5],[6,7,8,5,9,10]],
-    stars: [{name:'알데바란',latin:'Aldebaran',bayer:'α Tau',anchor:5,article:{title:'AI 인프라와 나의 AI',template:'woohui-article'}},{name:'엘나스',latin:'Elnath',bayer:'β Tau',anchor:0,article:{title:'주제관 이미지',template:'woohui-code-image',layout:'image',images:['./assets/articles/woohui/ai-infra-code.png']}},{name:'알키오네',latin:'Alcyone',bayer:'η Tau',anchor:6,article:{title:'AI 5층 케이크',template:'woohui-cake-image',layout:'image',images:['./assets/articles/woohui/ai-five-layers.jpg']}}] },
+    stars: [{name:'알데바란',latin:'Aldebaran',bayer:'α Tau',anchor:5,article:{title:'레픽 아나돌 주제관',template:'woohui-refik'}},{name:'엘나스',latin:'Elnath',bayer:'β Tau',anchor:0,article:{title:'My AI',template:'woohui-my-ai'}},{name:'알키오네',latin:'Alcyone',bayer:'η Tau',anchor:6,article:{title:'AI인프라 주제관',template:'woohui-infrastructure'}}] },
 ];

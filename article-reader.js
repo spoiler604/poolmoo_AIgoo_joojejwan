@@ -10,6 +10,43 @@
   const close = dialog.querySelector('[data-article-close]');
   let zoom = 1, trigger = null;
 
+  function decorateCodeDocument() {
+    let line = 0;
+    sheet.querySelectorAll('h1,h2,h3,h4,p,blockquote,figure,pre,summary,.article-kicker,.article-section-label').forEach(element => {
+      let target = element;
+      if (element.tagName === 'PRE') {
+        target = document.createElement('div');
+        target.className = 'editor-diagram-line';
+        element.before(target);
+        target.append(element);
+      }
+      target.classList.add('editor-line');
+      const number = document.createElement('span');
+      number.className = 'editor-line-number';
+      number.textContent = String(++line);
+      number.setAttribute('aria-hidden', 'true');
+      target.prepend(number);
+    });
+    // Color terms without interpreting any document content as HTML or code.
+    const walker = document.createTreeWalker(sheet, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node.parentElement.closest('a,pre,.editor-line-number') && /\b(?:AI|AGI|LLM|CPU|GPU|ChatGPT|Claude|Gemini|MoMA)\b/.test(node.textContent)) nodes.push(node);
+    }
+    nodes.forEach(node => {
+      const fragment = document.createDocumentFragment();
+      node.textContent.split(/(\b(?:AI|AGI|LLM|CPU|GPU|ChatGPT|Claude|Gemini|MoMA)\b)/g).forEach((text, index) => {
+        if (index % 2) {
+          const token = document.createElement('span');
+          token.className = 'editor-token'; token.textContent = text;
+          fragment.append(token);
+        } else fragment.append(document.createTextNode(text));
+      });
+      node.replaceWith(fragment);
+    });
+  }
+
   function fit() {
     const image = sheet.classList.contains('is-image') && sheet.querySelector('img');
     // Image windows hug their contents instead of keeping a tall empty page.
@@ -17,7 +54,7 @@
     const availableWidth = scroller.clientWidth - (image ? 24 : innerWidth <= 600 ? 16 : 32);
     const ratio = image ? (image.naturalWidth || Number(image.getAttribute('width'))) / (image.naturalHeight || Number(image.getAttribute('height'))) : 1;
     const imageWidth = image ? (scroller.clientHeight - 12) * ratio : Infinity;
-    sheet.style.width = `${Math.floor(Math.max(1, Math.min(image ? 1408 : 880, availableWidth, imageWidth)))}px`;
+    sheet.style.width = `${Math.floor(Math.max(1, Math.min(image ? 1408 : dialog.classList.contains('is-code') ? 1040 : 880, availableWidth, imageWidth)))}px`;
     if (image) {
       const toolbarHeight = dialog.querySelector('.article-toolbar').getBoundingClientRect().height;
       const imageHeight = parseFloat(sheet.style.width) / ratio * zoom;
@@ -59,8 +96,10 @@
       dialog.querySelector('h2').textContent = title;
       scroller.setAttribute('aria-label', title);
       dialog.classList.toggle('is-image', article.layout === 'image');
+      dialog.classList.toggle('is-code', article.layout !== 'image');
       sheet.classList.toggle('is-image', article.layout === 'image');
       sheet.replaceChildren(template.content.cloneNode(true));
+      if (article.layout !== 'image') decorateCodeDocument();
       sheet.querySelector('img')?.addEventListener('load', () => { if (dialog.open) fit(); }, { once: true });
       dialog.showModal();
       fit();

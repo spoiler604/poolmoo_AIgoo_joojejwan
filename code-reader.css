@@ -1,0 +1,55 @@
+.article-dialog.is-code { color-scheme: dark; border-radius: 12px; border-color: #41464f; background: #080a0d; color: #dcd8ca; }
+.is-code .article-toolbar { min-height: 58px; padding: 7px 14px 7px 22px; border-bottom: 1px solid #3d4149; background: #25272c; box-shadow: inset 0 2px #3575a7; }
+.is-code .article-toolbar h2 { display: flex; align-items: center; gap: 12px; color: #e0e0e0; font: 13px/1.4 Consolas, 'Cascadia Code', 'Apple SD Gothic Neo', monospace; }
+.is-code .article-toolbar h2::before { content: '{ }'; flex-shrink: 0; color: #a8d596; font-size: 14px; }
+.is-code .article-controls { flex-shrink: 0; }
+.is-code .article-controls button { color: #c9d2da; width: 36px; height: 36px; border-radius: 5px; }
+.is-code .article-controls button:hover { background: #ffffff12; }
+.is-code .article-controls button:disabled { color: #58606b; }
+.is-code .article-zoom { color: #8391a1; }
+.is-code .article-scroll { padding: 0; background: #080a0d; scrollbar-color: #424750 #0d1014; }
+.is-code .article-sheet { padding: 34px 34px 70px 76px; background: #080a0d; border-radius: 0; box-shadow: none; font: 16px/1.95 Consolas, 'Cascadia Code', Menlo, 'Noto Sans KR', monospace; color: #dcd8ca; }
+.is-code .article-sheet::before { content: ''; position: absolute; top: 0; bottom: 0; left: 57px; width: 1px; background: #272c33; }
+.is-code .article-sheet { position: relative; }
+.is-code .article-sheet .editor-line { position: relative; margin: 18px 0; padding: 0; border: 0; }
+.is-code .editor-line-number { position: absolute; left: -65px; top: 0; width: 42px; text-align: right; color: #4497ad; user-select: none; font: 13px/2.4 Consolas, monospace; letter-spacing: 0; }
+.is-code .article-sheet h1 { font-size: 28px; line-height: 1.6; font-weight: 500; color: #4ec9b0; letter-spacing: -.035em; margin-top: 12px; margin-bottom: 30px; }
+.is-code .article-sheet :is(h2,h3,h4) { color: #569cd6; font-size: 19px; line-height: 1.8; letter-spacing: -.02em; font-weight: 500; margin-top: 34px; }
+.is-code .article-sheet :is(h2,h3,h4)::after { content: ' {'; color: #d7ba7d; }
+.is-code .article-sheet .article-intro { color: #d7ba7d; font-size: 16px; }
+.is-code .article-sheet :is(.article-kicker,.article-section-label) { color: #739a55; font-size: 12px; letter-spacing: .02em; display: block; }
+.is-code .article-sheet :is(.article-kicker,.article-section-label)::after { content: ' //'; }
+.is-code .article-sheet section { margin: 30px 0 0; padding: 0; border: 0; }
+.is-code .article-sheet blockquote { color: #ce9178; font-size: 16px; line-height: 1.95; }
+.is-code .editor-token { color: #4ec9b0; }
+.is-code .article-sheet a { color: #79b5e3; overflow-wrap: anywhere; }
+.is-code .article-sheet .article-source { color: #81966b; font-size: 13px; }
+.is-code .article-sheet figure { max-width: 760px; }
+.is-code .article-sheet figure img { border-radius: 3px; border: 1px solid #2d333d; }
+.is-code .article-sheet details { padding: 4px 0 4px 14px; margin: 18px 0; border: 0; border-left: 1px solid #303842; border-radius: 0; font-size: inherit; }
+.is-code .article-sheet summary { color: #82b66c; font-size: 15px; font-weight: 400; cursor: pointer; }
+.is-code .article-sheet summary .editor-line-number { left: -79px; }
+.is-code .article-sheet details .editor-line:not(summary) .editor-line-number { left: -79px; }
+.is-code .article-sheet .editor-diagram { color: #9cdcfe; font: 14px/1.8 Consolas, 'Cascadia Code', monospace; white-space: pre; overflow-x: auto; }
+.preview-paper.preview-code { position: relative; padding-left: 35px; background: #080a0d; color: #4ec9b0; font-family: Consolas, 'Cascadia Code', 'Noto Sans KR', monospace; box-shadow: inset 0 2px #3575a7; }
+.preview-code::before { content: '1\a 2\a 3\a 4\a 5'; white-space: pre; position: absolute; top: 18px; left: 12px; color: #448799; font: 10px/2.1 Consolas, monospace; }
+.preview-paper.preview-code strong { font-size: 18px; letter-spacing: -.025em; }
+.preview-paper.preview-code span { color: #bea48d; }
+.topic-previews.is-compact .preview-code { padding-left: 25px; }
+.topic-previews.is-compact .preview-code::before { left: 7px; top: 11px; font-size: 8px; }
+.topic-previews.is-compact .preview-code strong { font-size: 12px; }
+@media (max-width: 600px) {
+  .is-code .article-toolbar { padding: 7px 8px; gap: 4px; }
+  .is-code .article-toolbar h2 { gap: 6px; font-size: 11px; overflow-wrap: anywhere; }
+  .is-code .article-controls { gap: 0; }
+  .is-code .article-controls button { width: 30px; }
+  .is-code .article-controls [data-article-close] { margin-left: 0; }
+  .is-code .article-zoom { min-width: 33px; font-size: 10px; }
+  .is-code .article-sheet { padding: 24px 15px 48px 55px; font-size: 14px; }
+  .is-code .article-sheet::before { left: 39px; }
+  .is-code .editor-line-number { left: -51px; width: 31px; font-size: 11px; }
+  .is-code .article-sheet h1 { font-size: 23px; }
+  .is-code .article-sheet :is(h2,h3,h4) { font-size: 17px; }
+  .is-code .article-sheet :is(.article-intro,blockquote) { font-size: 14px; }
+  .is-code .article-sheet details .editor-line-number { left: -65px !important; }
+}
