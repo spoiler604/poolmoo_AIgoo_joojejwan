@@ -3,7 +3,7 @@
   const cat = document.querySelector('.cat-easter-egg');
   const viewport = document.querySelector('.viewport');
   if (!cat || !viewport) return;
-  const interval = 3 * 60 * 1000;
+  const interval = 2 * 60 * 1000;
   let started = false, timer = 0, due = 0, remaining = interval, flight = null;
   function arm() {
     if (!started || document.hidden) return;

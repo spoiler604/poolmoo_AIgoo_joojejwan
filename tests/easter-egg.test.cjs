@@ -13,19 +13,19 @@ function setup() {
   vm.runInNewContext(source,{document,performance:{now:()=>now},Math,setTimeout:(fn,delay)=>{timers.set(++id,{fn,at:now+delay});return id;},clearTimeout:key=>timers.delete(key)});
   return {cat,document,events,timers,resolveFlight,get visits(){return visits;},tick(ms){now+=ms;for(const [id,t] of [...timers]) if(t.at<=now){timers.delete(id);t.fn();}}};
 }
-test('cat stays hidden until three minutes after the map is revealed',()=>{
+test('cat stays hidden until two minutes after the map is revealed',()=>{
   const s=setup();assert.equal(s.timers.size,0);assert.equal(s.cat.hidden,true);
-  s.events.get('mindmap:reveal')();s.tick(179999);assert.equal(s.visits,0);
+  s.events.get('mindmap:reveal')();s.tick(119999);assert.equal(s.visits,0);
   s.tick(1);assert.equal(s.visits,1);assert.equal(s.cat.hidden,false);
-  s.tick(179999);assert.equal(s.visits,1);s.tick(1);assert.equal(s.visits,2);
+  s.tick(119999);assert.equal(s.visits,1);s.tick(1);assert.equal(s.visits,2);
 });
-test('switching tabs pauses the three-minute countdown',()=>{
-  const s=setup();s.events.get('mindmap:reveal')();s.tick(90000);
+test('switching tabs pauses the two-minute countdown',()=>{
+  const s=setup();s.events.get('mindmap:reveal')();s.tick(60000);
   s.document.hidden=true;s.events.get('visibilitychange')();s.tick(900000);assert.equal(s.visits,0);
-  s.document.hidden=false;s.events.get('visibilitychange')();s.tick(89999);assert.equal(s.visits,0);
+  s.document.hidden=false;s.events.get('visibilitychange')();s.tick(59999);assert.equal(s.visits,0);
   s.tick(1);assert.equal(s.visits,1);
 });
 test('finishing the crossing hides the cat again',async()=>{
-  const s=setup();s.events.get('mindmap:reveal')();s.tick(180000);assert.equal(s.cat.hidden,false);
+  const s=setup();s.events.get('mindmap:reveal')();s.tick(120000);assert.equal(s.cat.hidden,false);
   s.resolveFlight();await Promise.resolve();assert.equal(s.cat.hidden,true);
 });
