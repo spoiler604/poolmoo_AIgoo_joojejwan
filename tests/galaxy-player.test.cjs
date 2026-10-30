@@ -40,7 +40,7 @@ function setup({ rejected = false, calibrate = false } = {}) {
   }) };
   const buffer = { getContext: () => ({
     drawImage() { drawn++; },
-    getImageData: () => ({ data: calibrate ? ellipse(800, 450, -30 * Math.PI / 180) : new Uint8ClampedArray([0, 0, 0, 255, 200, 120, 90, 255]) }),
+    getImageData: () => ({ data: calibrate ? ellipse(480, 270, -30 * Math.PI / 180) : new Uint8ClampedArray([0, 0, 0, 255, 200, 120, 90, 255]) }),
     putImageData: image => { output = image.data; },
   }) };
   const window = {};
@@ -130,8 +130,21 @@ test('video tilt follows the still and the oval feather removes bright rectangul
   s.frame(.1);
   assert.ok(Math.abs(Number(s.canvas.dataset.angleCorrection) + 10) < 1);
   assert.equal(s.output[3], 0, 'corner debris is cropped away');
-  assert.equal(s.output[(225 * 800 + 400) * 4 + 3], 255, 'the galaxy core remains solid');
+  assert.equal(s.output[(135 * 480 + 240) * 4 + 3], 255, 'the galaxy core remains solid');
   assert.ok(s.output.some((value, index) => index % 4 === 3 && value > 0 && value < 255), 'the edge fades smoothly');
+  s.event('ended');
+  assert.equal(await complete, true);
+});
+
+test('duplicate and overly frequent decoded frames do not repeat pixel processing', async () => {
+  const s = setup();
+  const complete = s.player.play();
+  s.frame(.1);
+  s.frame(.1);
+  s.frame(.12);
+  assert.equal(s.drawn, 1);
+  s.frame(.15);
+  assert.equal(s.drawn, 2);
   s.event('ended');
   assert.equal(await complete, true);
 });

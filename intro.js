@@ -43,6 +43,8 @@
     tunnel?.stop();
     revealMap();
     intro.hidden = true;
+    // The hidden walking GIF is no longer needed after this one-way intro.
+    walking.removeAttribute('src');
     intro.dataset.stage = 'complete';
     intro.removeAttribute('aria-busy');
     map.inert = false;

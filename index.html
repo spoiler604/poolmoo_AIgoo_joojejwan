@@ -13,11 +13,9 @@
     <link rel="stylesheet" href="./article-reader.css" />
     <link rel="stylesheet" href="./code-reader.css" />
     <link rel="stylesheet" href="./easter-egg.css" />
-    <link rel="preload" as="image" href="./assets/cosmos/milky-way.jpg" />
-    <link rel="preload" as="image" href="./assets/cosmos/spiral-galaxy.png" />
-    <link rel="preload" as="image" href="./assets/cosmos/astronaut-constellation-mono.png" />
-    <link rel="preload" as="image" href="./assets/intro/figure-walk.gif" />
-    <link rel="preload" as="image" href="./assets/intro/figure-open.png" />
+    <link rel="preload" as="image" href="./assets/cosmos/spiral-galaxy.webp" />
+    <link rel="preload" as="image" href="./assets/intro/figure-walk.gif" fetchpriority="high" />
+    <link rel="preload" as="image" href="./assets/intro/figure-open.webp" />
   </head>
   <body class="intro-active">
     <button class="sound-toggle" type="button" aria-label="소리 끄기" aria-pressed="true" title="소리 끄기">
@@ -27,7 +25,7 @@
       <span class="intro-stars" aria-hidden="true"></span><span class="intro-aura" aria-hidden="true"></span>
       <span class="intro-camera" aria-hidden="true">
         <span class="intro-figure">
-        <img class="intro-person intro-person-open" src="./assets/intro/figure-open.png" alt="" draggable="false" />
+        <img class="intro-person intro-person-open" src="./assets/intro/figure-open.webp" alt="" draggable="false" />
         <img class="intro-person intro-person-walk" src="./assets/intro/figure-walk.gif" alt="" draggable="false" />
         <span class="intro-chest-light"></span>
       </span></span>
@@ -68,8 +66,8 @@
           <button class="node node-root galaxy" type="button" aria-label="2026 풀무제 소모둠" aria-expanded="false" aria-controls="main-topics">
             <span class="galaxy-aura" aria-hidden="true"></span>
             <span class="galaxy-rotor" aria-hidden="true">
-              <img class="galaxy-art" src="./assets/cosmos/spiral-galaxy.png" alt="" draggable="false" />
-              <video class="galaxy-video" src="./assets/cosmos/galaxy-swirl.mp4" muted playsinline preload="auto" tabindex="-1"></video>
+              <img class="galaxy-art" src="./assets/cosmos/spiral-galaxy.webp" alt="" draggable="false" />
+              <video class="galaxy-video" src="./assets/cosmos/galaxy-swirl-lite.mp4" muted playsinline preload="none" tabindex="-1"></video>
               <canvas class="galaxy-motion" aria-hidden="true"></canvas>
             </span>
             <span class="galaxy-caption"><span>2026 풀무제 소모둠</span><small>에이구</small></span>

@@ -10,13 +10,14 @@
     let width = 0, height = 0, frame = 0, stopped = false, started = false;
     let resolveFinished, lastTime = 0, distance = 0;
     const finished = new Promise(resolve => { resolveFinished = resolve; });
-    const stars = Array.from({ length: innerWidth < 600 ? 220 : 380 }, () => ({
+    const stars = Array.from({ length: innerWidth < 600 ? 220 : 280 }, () => ({
       angle: Math.random() * Math.PI * 2, radius: .09 + Math.random() * .9,
       depth: .1 + Math.random() * 3.9, size: .6 + Math.random() * 1.1, warmth: Math.random(),
     }));
     const resize = () => {
       width = innerWidth; height = innerHeight;
-      const ratio = Math.min(devicePixelRatio || 1, 1.5);
+      // A 4K display should not require painting millions of extra pixels.
+      const ratio = Math.min(devicePixelRatio || 1, 1.5, Math.sqrt(1600000 / (width * height)));
       canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     };

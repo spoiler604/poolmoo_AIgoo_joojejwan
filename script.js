@@ -174,7 +174,8 @@
     if (star.presentation?.type === 'pdf') image = `${star.presentation.basePath}/page-1.jpg`;
     if (image) {
       const thumbnail = document.createElement('img');
-      thumbnail.src = image; thumbnail.alt = ''; thumbnail.draggable = false;
+      thumbnail.dataset.src = image; thumbnail.decoding = 'async';
+      thumbnail.alt = ''; thumbnail.draggable = false;
       media.append(thumbnail);
     } else if (star.presentation?.embedUrl) {
       const frame = document.createElement('iframe');
@@ -514,6 +515,8 @@
     previewLayer.inert = false;
     positionPreviews();
     view.previews.forEach((preview, index) => {
+      const thumbnail = preview.media.querySelector('img');
+      if (thumbnail && !thumbnail.hasAttribute('src')) thumbnail.src = thumbnail.dataset.src;
       const frame = preview.media.querySelector('iframe');
       if (frame) frame.src = frame.dataset.src;
       appear(preview.element, index * 100);

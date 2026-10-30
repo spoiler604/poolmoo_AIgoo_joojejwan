@@ -82,3 +82,12 @@ test('Canvas를 사용할 수 없으면 일반 인트로로 진행할 수 있다
   assert.equal(s.create(null), null);
   assert.equal(s.create({ getContext: () => null }), null);
 });
+
+test('4K 화면에서도 터널의 그리기 버퍼는 약 160만 픽셀 이내로 제한한다', async () => {
+  const s = scene(3840, 2160), tunnel = s.create(s.canvas);
+  const done = tunnel.start({ x: .52, y: .55 });
+  assert.ok(s.canvas.width * s.canvas.height <= 1602000);
+  for (let t = 0; t <= 3200; t += 100) s.step(t);
+  await done;
+  assert.ok(s.draws > 0);
+});

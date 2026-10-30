@@ -26,11 +26,16 @@
   window.createGalaxyPlayer = ({ root, video, canvas }) => {
     const context = canvas.getContext('2d', { willReadFrequently: true });
     const buffer = document.createElement('canvas');
-    buffer.width = 800; buffer.height = 450;
+    // Match the on-screen size rather than processing a large video frame.
+    buffer.width = 480; buffer.height = 270;
     const bufferContext = buffer.getContext('2d', { willReadFrequently: true });
     const still = root.querySelector('.galaxy-art');
     let cancelCurrent = null;
     let alignment = null, feather = null;
+    const alphaTable = Uint8Array.from({ length: 256 }, (_, brightness) => {
+      const alpha = Math.max(0, Math.min(1, (brightness - 8) / 24));
+      return Math.round(255 * alpha * alpha * (3 - 2 * alpha));
+    });
     // Match the 600:500 artwork box, so a square PNG and a 16:9 video
     // are measured in the same coordinates before blending.
     canvas.width = 840;
@@ -50,7 +55,7 @@
       alignment = {
         x: target?.x ?? canvas.width / 2, y: target?.y ?? canvas.height / 2,
         source, angle: target ? target.angle - source.angle : 0,
-        scale: target ? Math.max(.65, Math.min(1.6, target.major / source.major)) : 1,
+        scale: target ? Math.max(.65 * 800 / buffer.width, Math.min(1.6 * 800 / buffer.width, target.major / source.major)) : 800 / buffer.width,
       };
       canvas.dataset.angleCorrection = (alignment.angle * 180 / Math.PI).toFixed(2);
       feather = new Float32Array(buffer.width * buffer.height);
@@ -72,7 +77,7 @@
         cancelCurrent?.(false);
         if (!context || !bufferContext) return Promise.resolve(false);
         return new Promise((resolve) => {
-          let finished = false, callback = 0, guard = 0, frames = 0;
+          let finished = false, callback = 0, guard = 0, frames = 0, lastMediaTime = -Infinity;
           const useVideoFrames = typeof video.requestVideoFrameCallback === 'function';
           const finish = (success) => {
             if (finished) return;
@@ -99,7 +104,7 @@
           };
           const drawFrame = () => {
             if (finished) return;
-            if (video.readyState >= 2 && !video.seeking) {
+            if (video.readyState >= 2 && !video.seeking && video.currentTime - lastMediaTime >= 1 / 30) {
               try {
                 bufferContext.drawImage(video, 0, 0, buffer.width, buffer.height);
                 const frame = bufferContext.getImageData(0, 0, buffer.width, buffer.height);
@@ -107,8 +112,7 @@
                 if (!alignment) alignFirstFrame(pixels);
                 for (let i = 0; i < pixels.length; i += 4) {
                   const brightness = Math.max(pixels[i], pixels[i + 1], pixels[i + 2]);
-                  const alpha = Math.max(0, Math.min(1, (brightness - 8) / 24));
-                  pixels[i + 3] = Math.round(255 * alpha * alpha * (3 - 2 * alpha) * (feather?.[i / 4] ?? 1));
+                  pixels[i + 3] = Math.round(alphaTable[brightness] * (feather?.[i / 4] ?? 1));
                 }
                 bufferContext.putImageData(frame, 0, 0);
                 context.clearRect(0, 0, canvas.width, canvas.height);
@@ -118,6 +122,7 @@
                 context.scale(alignment?.scale ?? 1, alignment?.scale ?? 1);
                 context.drawImage(buffer, -(alignment?.source.x ?? buffer.width / 2), -(alignment?.source.y ?? buffer.height / 2));
                 context.restore();
+                lastMediaTime = video.currentTime;
                 frames++;
                 canvas.dataset.frames = String(frames);
                 canvas.dataset.mediaTime = video.currentTime.toFixed(3);

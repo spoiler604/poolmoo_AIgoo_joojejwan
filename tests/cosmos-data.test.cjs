@@ -12,7 +12,7 @@ const styles = fs.readFileSync(path.join(__dirname, '..', 'style.css'), 'utf8');
 test('seven named charts, in the requested order', () => {
   assert.equal(topics.map(t => t.name).join(','), '한울,상목,소모둠 소개,승원,경찬,겸서,우희');
   assert.equal(new Set(topics.map(t => t.id)).size, 7);
-  assert.equal(topics.find(t => t.id === 'aigu').image, './assets/cosmos/astronaut-constellation-mono.png');
+  assert.equal(topics.find(t => t.id === 'aigu').image, './assets/cosmos/astronaut-constellation-mono.webp');
   assert.ok(topics.filter(t => t.id !== 'aigu').every(t => !t.image));
   assert.notEqual(JSON.stringify(topics[0].points), JSON.stringify(topics[3].points));
 });

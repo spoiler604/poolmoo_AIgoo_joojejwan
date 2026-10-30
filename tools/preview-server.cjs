@@ -2,7 +2,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const base = path.resolve(__dirname, '..');
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript', '.css':'text/css', '.mp4':'video/mp4', '.gif':'image/gif', '.png':'image/png', '.jpg':'image/jpeg', '.pdf':'application/pdf' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript', '.css':'text/css', '.mp4':'video/mp4', '.gif':'image/gif', '.png':'image/png', '.webp':'image/webp', '.jpg':'image/jpeg', '.pdf':'application/pdf' };
 http.createServer((req, res) => {
   let file;
   try {

@@ -5,6 +5,7 @@
   const AudioEngine = window.AudioContext || window.webkitAudioContext;
   if (!AudioEngine) { button.hidden = true; return; }
   let enabled = true;
+  const volume = .96;
   let context, master, effects, ambience, noise, reverb;
   let introAmbience, introLeft = false, introStarted = false;
   const introSources = [];
@@ -38,7 +39,7 @@
   function create() {
     context = new AudioEngine({ latencyHint: 'interactive' });
     master = context.createGain();
-    master.gain.value = enabled ? .48 : 0;
+    master.gain.value = enabled ? volume : 0;
     const limiter = context.createDynamicsCompressor();
     limiter.threshold.value = -18;
     limiter.ratio.value = 5;
@@ -208,7 +209,7 @@
     unlock();
     if (context) {
       master.gain.cancelScheduledValues(context.currentTime);
-      master.gain.setTargetAtTime(enabled ? .48 : 0, context.currentTime, .04);
+      master.gain.setTargetAtTime(enabled ? volume : 0, context.currentTime, .04);
       if (!enabled) stopEffects();
     }
     updateButton();
